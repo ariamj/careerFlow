@@ -60,7 +60,17 @@ export default function NavBar() {
                 <PopoverGroup className="hidden lg:flex lg:gap-x-12">
                     {tabs.map((tab) => {
                         return (
-                            <Link to={tab.to} key={tab.label} className="text-sm/6 font-semibold text-gray-900 dark:text-white">
+                            <Link
+                                to={tab.to}
+                                key={tab.label}
+                                className="text-sm/6 font-semibold"
+                                activeProps={{
+                                    className: "text-sm/6 font-semibold text-indigo-600 dark:text-indigo-400"
+                                }}
+                                inactiveProps={{
+                                    className: "text-sm/6 font-semibold text-gray-900 dark:text-white"
+                                }}
+                            >
                                 {tab.label}
                             </Link>
                         )
@@ -107,7 +117,13 @@ export default function NavBar() {
                                             to={tab.to}
                                             key={tab.label}
                                             onClick={() => setMobileMenuOpen(false)}
-                                            className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
+                                            className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold"
+                                            activeProps={{
+                                                className: "-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-indigo-600 bg-indigo-50 dark:text-indigo-400 dark:bg-indigo-500/10"
+                                            }}
+                                            inactiveProps={{
+                                                className: "-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
+                                            }}
                                         >
                                             {tab.label}
                                         </Link>

@@ -7,7 +7,7 @@ function PostingArchivePage() {
     const data = Route.useLoaderData()
 
     return (
-        <div>
+        <div className="rounded-3xl bg-card p-6 text-card-foreground shadow-sm ring-1 ring-border">
             <DataTable columns={columns} data={data} />
         </div>
     )
