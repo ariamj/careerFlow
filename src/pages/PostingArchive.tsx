@@ -1,24 +1,7 @@
-import { columns, type Application } from '@/components/columns'
+import { columns } from '@/components/columns'
 import { DataTable } from '@/components/dataTable'
+import { fetchApplications } from '@/services/dataApi'
 import { createFileRoute } from '@tanstack/react-router'
-
-async function getData(): Promise<Application[]> {
-    // fetch data from API or database
-    return [
-        {
-            id: "1",
-            company: "Company A",
-            position: "SDE",
-            status: "Shortlisted"
-        },
-        {
-            id: "2",
-            company: "Company B",
-            position: "Web Developer",
-            status: "Applied"
-        },
-    ]
-}
 
 function PostingArchivePage() {
     const data = Route.useLoaderData()
@@ -31,6 +14,6 @@ function PostingArchivePage() {
 }
 
 export const Route = createFileRoute('/PostingArchive')({
-    loader: () => getData(),
+    loader: () => fetchApplications(),
     component: PostingArchivePage,
 })

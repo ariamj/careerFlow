@@ -12,13 +12,7 @@ import {
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
-
-export type Application = {
-    id: string
-    company: string
-    position: string
-    status: "Shortlisted" | "Applied" | "Rejected"
-}
+import { type Application } from '@/utils/types'
 
 export const columns: ColumnDef<Application>[] = [
     {

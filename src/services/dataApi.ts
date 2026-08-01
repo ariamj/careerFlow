@@ -1,3 +1,5 @@
+import { type Application } from "@/utils/types";
+
 export interface CustomData {
     id: string;
     company: string;
@@ -6,7 +8,7 @@ export interface CustomData {
 }
 
 // Generate dummy data
-const mockDatabase: CustomData[] = Array.from( { length: 50 }, (_, i) => ({
+const mockDatabase: Application[] = Array.from( { length: 50 }, (_, i) => ({
     id: `id-${i}`,
     company: `Company ${i}`,
     position: i % 2 == 0 ? 'SDE' : 'Web Developer',
@@ -28,4 +30,10 @@ export const fetchCustomData = async (search?: string, page = 1) => {
         items: filtered.slice(start, start + pageSize),
         totalPages: Math.ceil(filtered.length / pageSize),
     };
+};
+
+export const fetchApplications = async (): Promise<Application[]> => {
+    await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate network delay
+
+    return [...mockDatabase];
 };
