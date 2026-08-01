@@ -20,8 +20,8 @@ async function getData(): Promise<Application[]> {
     ]
 }
 
-async function PostingArchivePage() {
-    const data = await getData()
+function PostingArchivePage() {
+    const data = Route.useLoaderData()
 
     return (
         <div>
@@ -31,5 +31,6 @@ async function PostingArchivePage() {
 }
 
 export const Route = createFileRoute('/PostingArchive')({
+    loader: () => getData(),
     component: PostingArchivePage,
 })

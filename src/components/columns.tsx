@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Checkbox } from './ui/checkbox'
 
 export type Application = {
     id: string
@@ -20,6 +21,29 @@ export type Application = {
 }
 
 export const columns: ColumnDef<Application>[] = [
+    {
+        id: "select",
+        header: ({table}) => (
+            <Checkbox
+                checked={table.getIsAllPageRowsSelected()}
+                indeterminate={
+                    table.getIsSomePageRowsSelected() &&
+                    !table.getIsAllPageRowsSelected()
+                }
+                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                aria-label="Select all"
+            />
+        ),
+        cell: ({row}) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+    },
     {
         accessorKey: "company",
         header: ({column}) => {
