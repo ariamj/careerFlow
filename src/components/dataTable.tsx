@@ -10,6 +10,7 @@ import {
     useReactTable,
     type ColumnDef,
     type ColumnFiltersState,
+    type PaginationState,
     type SortingState
 } from "@tanstack/react-table";
 import {
@@ -32,6 +33,10 @@ export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
+    const [pageSize, setPageSize] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 20,
+    })
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [rowSelection, setRowSelection] = React.useState({})
@@ -40,6 +45,7 @@ export function DataTable<TData, TValue>({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
+        onPaginationChange: setPageSize,
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
@@ -47,6 +53,7 @@ export function DataTable<TData, TValue>({
         getFilteredRowModel: getFilteredRowModel(),
         onRowSelectionChange: setRowSelection,
         state: {
+            pagination: pageSize,
             sorting,
             columnFilters,
             rowSelection
@@ -63,14 +70,14 @@ export function DataTable<TData, TValue>({
                     className="max-w-sm"
                     />
             </div>
-            <div className="overflow-hidden rounded-md border">
+            <div className="overflow-hidden rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="bg-primary hover:bg-primary">
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} className="text-bold text-primary-foreground">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(

@@ -9,7 +9,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react'
+import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
 import { type Application } from '@/utils/types'
@@ -45,6 +45,7 @@ export const columns: ColumnDef<Application>[] = [
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    className="cursor-pointer p-0 hover:bg-transparent hover:text-inherit"
                 >
                     Company
                     <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -81,31 +82,41 @@ export const columns: ColumnDef<Application>[] = [
             const application = row.original
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger
-                        render={
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        }>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => console.log("Edit application", application.id)}
-                        >
-                            Edit
-                        </DropdownMenuItem>
-                        {/* <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(application.id)}
-                        >
-                            Copy application ID
-                        </DropdownMenuItem> */}
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="flex justify-end space-x-1">
+                    <Button
+                        variant="ghost"
+                        onClick={() => console.log("Edit application", application.id)}
+                        className="rounded-full cursor-pointer p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50"
+                    >
+                        <Pencil />
+                    </Button>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger
+                            render={
+                                <Button variant="ghost" className="h-8 w-8 p-0 rounded-full cursor-pointer">
+                                    <span className="sr-only">Open menu</span>
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            }>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                                onClick={() => console.log("Edit application", application.id)}
+                            >
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => console.log("Delete application", application.id)}
+                                className="text-destructive"
+                            >
+                                Delete
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>View details</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             )
         }
     }
