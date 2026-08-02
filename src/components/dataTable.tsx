@@ -22,7 +22,13 @@ import {
     TableRow
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupButton,
+    InputGroupInput
+} from "@/components/ui/input-group";
+import { SearchIcon, XIcon } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -63,12 +69,34 @@ export function DataTable<TData, TValue>({
     return (
         <div>
             <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter applications..."
-                    value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("company")?.setFilterValue(event.target.value)}
-                    className="max-w-sm"
+                <InputGroup className="max-w-sm">
+                    <InputGroupInput
+                        placeholder="Search applications..."
+                        value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) => table.getColumn("company")?.setFilterValue(event.target.value)}
                     />
+                    <InputGroupAddon align="inline-start">
+                        <SearchIcon className="text-muted-foreground" />
+                    </InputGroupAddon>
+                    {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
+                        <InputGroupAddon align="inline-end">
+                            <InputGroupButton
+                                onClick={() => table.resetColumnFilters()}
+                                className="rounded-full cursor-pointer p-1"
+                            >
+                                <XIcon />
+                                <span className="sr-only">Clear filters</span>
+                            </InputGroupButton>
+                        </InputGroupAddon>
+                    )}
+                    <InputGroupAddon align="inline-end">
+                        {
+                            table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length
+                            ? ""
+                            : `${table.getFilteredRowModel().rows.length} results`
+                        }
+                    </InputGroupAddon>
+                </InputGroup>
             </div>
             <div className="overflow-hidden rounded-md">
                 <Table>

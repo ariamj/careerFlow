@@ -12,7 +12,8 @@ import {
 import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
-import { type Application } from '@/utils/types'
+import { type Application, type Status, type WorkMode } from '@/utils/types'
+import { Badge } from '@/components/ui/badge'
 
 export const columns: ColumnDef<Application>[] = [
     {
@@ -68,11 +69,66 @@ export const columns: ColumnDef<Application>[] = [
         }
     },
     {
+        accessorKey: "workMode",
+        header: "Work Mode",
+        cell: ({row}) => {
+            const workMode = row.getValue("workMode") as WorkMode
+            return (
+                <div className="text-left">
+                    {workMode? (
+                        <Badge
+                            variant="secondary"
+                        style={{
+                                '--bg-colour': workMode.colour,
+                                '--bg-colour-light': workMode.lightColour ? workMode.lightColour : workMode.colour,
+                                '--bg-colour-dark': workMode.darkColour ? workMode.darkColour : workMode.colour
+                            } as React.CSSProperties}
+                            className="bg-[var(--bg-colour)] bg-[var(--bg-colour-light)] dark:bg-[var(--bg-colour-dark)]"
+                        >
+                            {workMode.label}
+                        </Badge>
+                    ): null}
+                </div>
+            )
+        }
+    },
+    {
+        accessorKey: "applyDate",
+        header: "Date Applied",
+        cell: ({row}) => {
+            const applyDate = row.getValue("applyDate") as Date
+            return (
+                <div className="text-left">
+                    {applyDate.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric"
+                    })}
+                </div>
+            )
+        }
+    },
+    {
         accessorKey: "status",
         header: "Status",
         cell: ({row}) => {
+            const status_list = row.getValue("status") as Status[]
             return (
-                <div className="text-left">{row.getValue("status")}</div>
+                <div className="text-left flex flex-wrap gap-1">
+                    {status_list.map((status) => (
+                        <Badge
+                            variant="secondary"
+                            style={{
+                                '--bg-colour': status.colour,
+                                '--bg-colour-light': status.lightColour ? status.lightColour : status.colour,
+                                '--bg-colour-dark': status.darkColour ? status.darkColour : status.colour
+                            } as React.CSSProperties}
+                            className="bg-[var(--bg-colour)] bg-[var(--bg-colour-light)] dark:bg-[var(--bg-colour-dark)]"
+                        >
+                            {status.label}
+                        </Badge>
+                    ))}
+                </div>
             )
         }
     },

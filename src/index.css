@@ -6,7 +6,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
+:root {  
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -32,6 +32,27 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* Notion colour schemes */
+  --notion-bg-gray: #EBECED;
+  --notion-bg-brown: #E9E5E3;
+  --notion-bg-orange: #FAEBDD;
+  --notion-bg-yellow: #FBF3DB;
+  --notion-bg-green: #DDEDEA;
+  --notion-bg-blue: #DDEBF1;
+  --notion-bg-purple: #EAE4F2;
+  --notion-bg-pink: #F4DFEB;
+  --notion-bg-red: #FBE4E4;
+  --notion-text-gray: #9B9A97;
+  --notion-text-brown: #64473A;
+  --notion-text-orange: #D9730D;
+  --notion-text-yellow: #DFAB01;
+  --notion-text-green: #0F7B6C;
+  --notion-text-blue: #0B6E99;
+  --notion-text-purple: #6940A5;
+  --notion-text-pink: #AD1A72;
+  --notion-text-red: #E03E3E;
+
 
   @media (max-width: 1024px) {
     font-size: 16px;
@@ -110,6 +131,27 @@
     --social-bg: rgba(47, 48, 58, 0.5);
     --shadow:
       rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    
+
+    /* Notion colour schemes */
+    --notion-bg-gray: #454B4E;
+    --notion-bg-brown: #434040;
+    --notion-bg-orange: #594A3A;
+    --notion-bg-yellow: #59563B;
+    --notion-bg-green: #354C4B;
+    --notion-bg-blue: #364954;
+    --notion-bg-purple: #443F57;
+    --notion-bg-pink: #533B4C;
+    --notion-bg-red: #594141;
+    --notion-text-gray: rgb(151,154,155,0.95);
+    --notion-text-brown: #937264;
+    --notion-text-orange: #FFA344;
+    --notion-text-yellow: #FFDC49;
+    --notion-text-green: #4DAB9A;
+    --notion-text-blue: #529CCA;
+    --notion-text-purple: #9A6DD7;
+    --notion-text-pink: #E255A1;
+    --notion-text-red: #FF7369;
   }
 
   #social .button-icon {
