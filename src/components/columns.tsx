@@ -118,6 +118,7 @@ export const columns: ColumnDef<Application>[] = [
                     {status_list.map((status) => (
                         <Badge
                             variant="secondary"
+                            key={status.value}
                             style={{
                                 '--bg-colour': status.colour,
                                 '--bg-colour-light': status.lightColour ? status.lightColour : status.colour,
