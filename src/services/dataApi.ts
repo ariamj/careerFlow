@@ -1,4 +1,4 @@
-import { STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application } from "@/utils/types";
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application } from "@/utils/types";
 
 export interface CustomData {
     id: string;
@@ -11,6 +11,7 @@ export interface CustomData {
 // Generate dummy data
 const mockDatabase: Application[] = Array.from( { length: 50 }, (_, i) => ({
     id: `id-${i}`,
+    interest: i % 3 == 0 ? INTEREST_LEVEL_OPTIONS.HIGH : (i % 3 == 1 ? INTEREST_LEVEL_OPTIONS.MEDIUM : INTEREST_LEVEL_OPTIONS.LOW),
     company: `Company ${i}`,
     position: i % 2 == 0 ? 'SDE' : 'Web Developer',
     workMode: i % 4 == 0 ? WORK_MODE_OPTIONS.REMOTE : (i % 4 == 1 ? WORK_MODE_OPTIONS.HYBRID : (i % 4 == 2 ? WORK_MODE_OPTIONS.ON_SITE : undefined)),

@@ -12,7 +12,7 @@ import {
 import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
-import { type Application, type Status, type WorkMode } from '@/utils/types'
+import { type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
 import { Badge } from '@/components/ui/badge'
 
 export const columns: ColumnDef<Application>[] = [
@@ -40,6 +40,35 @@ export const columns: ColumnDef<Application>[] = [
         enableHiding: false,
     },
     {
+        id: "interest",
+        accessorKey: "interest",
+        header: "",
+        cell: ({row}) => {
+            const interest = row.getValue("interest") as InterestLevel
+
+            return (
+                <div className="text-left">
+                    {interest? (
+                        <Badge
+                            variant="secondary"
+                            style={{
+                                '--bg-colour': interest.colour,
+                                '--bg-colour-light': interest.lightColour ? interest.lightColour : interest.colour,
+                                '--bg-colour-dark': interest.darkColour ? interest.darkColour : interest.colour
+                            } as React.CSSProperties}
+                            className="bg-[var(--bg-colour)] bg-[var(--bg-colour-light)] dark:bg-[var(--bg-colour-dark)]"
+                        >
+                            {interest.label}
+                        </Badge>
+                    ): (
+                        <div className="text-muted-foreground">N/A</div>
+                    )}
+                </div>
+            )
+        }
+    },
+    {
+        id: "company",
         accessorKey: "company",
         header: ({column}) => {
             return (
@@ -60,6 +89,7 @@ export const columns: ColumnDef<Application>[] = [
         }
     },
     {
+        id: "position",
         accessorKey: "position",
         header: "Position",
         cell: ({row}) => {
@@ -69,6 +99,7 @@ export const columns: ColumnDef<Application>[] = [
         }
     },
     {
+        id: "workMode",
         accessorKey: "workMode",
         header: "Work Mode",
         cell: ({row}) => {
@@ -78,7 +109,7 @@ export const columns: ColumnDef<Application>[] = [
                     {workMode? (
                         <Badge
                             variant="secondary"
-                        style={{
+                            style={{
                                 '--bg-colour': workMode.colour,
                                 '--bg-colour-light': workMode.lightColour ? workMode.lightColour : workMode.colour,
                                 '--bg-colour-dark': workMode.darkColour ? workMode.darkColour : workMode.colour
@@ -93,6 +124,7 @@ export const columns: ColumnDef<Application>[] = [
         }
     },
     {
+        id: "applyDate",
         accessorKey: "applyDate",
         header: "Date Applied",
         cell: ({row}) => {
@@ -109,6 +141,7 @@ export const columns: ColumnDef<Application>[] = [
         }
     },
     {
+        id: "status",
         accessorKey: "status",
         header: "Status",
         cell: ({row}) => {

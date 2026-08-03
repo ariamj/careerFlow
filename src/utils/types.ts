@@ -1,5 +1,6 @@
 export type Application = {
     id: string
+    interest?: InterestLevel | undefined
     company: string
     position: string
     workMode?: WorkMode | undefined
@@ -7,7 +8,7 @@ export type Application = {
     status: Status[]
 }
 
-export type WorkMode = {
+export type InterestLevel = {
     label: string
     value: string
     colour: string
@@ -15,7 +16,25 @@ export type WorkMode = {
     darkColour?: string
 }
 
-export type Status = {
+export const INTEREST_LEVEL_OPTIONS = {
+    LOW: {
+        label: "!",
+        value: "low",
+        colour: "var(--notion-bg-yellow)",
+    },
+    MEDIUM: {
+        label: "!!",
+        value: "medium",
+        colour: "var(--notion-bg-pink)",
+    },
+    HIGH: {
+        label: "!!!",
+        value: "high",
+        colour: "var(--notion-bg-red)",
+    }
+}
+
+export type WorkMode = {
     label: string
     value: string
     colour: string
@@ -41,6 +60,13 @@ export const WORK_MODE_OPTIONS = {
     }
 }
 
+export type Status = {
+    label: string
+    value: string
+    colour: string
+    lightColour?: string
+    darkColour?: string
+}
 
 export const STATUS_OPTIONS = {
     SHORTLISTED: {
