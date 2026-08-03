@@ -5,8 +5,16 @@ import './index.css'
 // import App from './App.tsx'
 
 import { routeTree } from './routeTree.gen.ts'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-const router = createRouter({ routeTree })
+const queryClient = new QueryClient()
+
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+})
 
 const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
@@ -27,6 +35,8 @@ declare module '@tanstack/react-router' {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </StrictMode>
 )

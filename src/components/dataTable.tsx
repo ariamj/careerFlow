@@ -48,7 +48,7 @@ export function DataTable<TData, TValue>({
     const [rowSelection, setRowSelection] = React.useState({})
 
     const table = useReactTable({
-        data,
+        data: data ?? [],
         columns,
         getCoreRowModel: getCoreRowModel(),
         onPaginationChange: setPageSize,
