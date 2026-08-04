@@ -17,6 +17,14 @@ function DashboardPage() {
 
     const { width, containerRef, mounted } = useContainerWidth();
     const layouts = {
+        lg: [
+            { i: "top-shortlist", x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
+            { i: "total-applications", x: 2, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "applied", x: 3, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "shortlisted", x: 2, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "rejected", x: 3, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "company-app-sites", x: 0, y: 2, w: 4, h: 2.5, minW: 4, minH: 2 },
+        ],
         md: [
             { i: "top-shortlist", x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
             { i: "total-applications", x: 2, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
