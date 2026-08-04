@@ -1,80 +1,100 @@
 import { columns } from '@/components/columns';
+import { DataTable } from '@/components/dataTable';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableRow
-} from '@/components/ui/table';
 import { applicationQueryOptions } from '@/utils/queries';
-import { INTEREST_LEVEL_OPTIONS } from '@/utils/types';
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS } from '@/utils/types';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
-import {
-    flexRender,
-    getCoreRowModel,
-    useReactTable
-} from '@tanstack/react-table';
 import { useMemo } from 'react';
 
 function DashboardPage() {
     const {data: data} = useQuery(applicationQueryOptions)
-
     const filteredData = useMemo(() => {
         return data?.filter((application) => application.interest?.value === INTEREST_LEVEL_OPTIONS.HIGH.value) ?? [];
     }, [data])
 
-    const table = useReactTable({
-        data: filteredData ?? [],
-        columns: columns.filter((column) => {
-            return (column.id === "company" || column.id === "position" || column.id === "workMode")
-        }),
-        getCoreRowModel: getCoreRowModel(),
-    })
-
     return (
         <div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="text-2xl font-bold bg-card text-card-foreground shadow-sm ring-1 ring-border p-4 rounded-md">
-                    <div>
-                        Top Shortlist
-                    </div>
-                    <ScrollArea className="h-72 rounded-md">
-                        <Table>
-                            <TableBody>
-                                {table.getRowModel().rows?.length ? (
-                                    table.getRowModel().rows.map((row) => (
-                                        <TableRow
-                                            key={row.id}
-                                            data-state={row.getIsSelected() && "selected"}
-                                        >
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id}>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={columns.length} className="h-24 text-center">
-                                            No results.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </ScrollArea>
-                </div>
-                <div className="text-2xl font-bold bg-card text-card-foreground shadow-sm ring-1 ring-border p-4 rounded-md">
-                    Total Applications
-                    <div className="mt-2 text-3xl font-semibold">{data?.length ?? 0}</div>
+                <Card className="text-xl font-bold bg-card text-card-foreground shadow-sm ring-1 ring-border p-4 rounded-md">
+                    <CardHeader>
+                        <CardTitle className="font-bold text-lg">Top Shortlist</CardTitle>
+                    </CardHeader>
+                    <CardContent className="-mb-(--card-spacing)">
+                        <ScrollArea className="h-72 rounded-md flex-2 flex items-center mt-2 text-3xl font-semibold -mx-(--card-spacing)">
+                            <DataTable
+                                columns={columns.filter((column) => {
+                                    return (column.id === "company" || column.id === "position" || column.id === "workMode")
+                                })}
+                                data={filteredData}
+                                header={false}
+                                searchBar={false}
+                                pagination={false}
+                            />
+                        </ScrollArea>
+                    </CardContent>
+                </Card>
+                <div className="grid grid-cols-2 grid-rows-2 gap-4">
+                    <Card className="flex flex-col mx-auto w-full max-w-xs">
+                        <CardHeader>
+                            <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col justify-center items-center flex-1">
+                            <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
+                        </CardContent>
+                    </Card>
+                    <Card className="flex flex-col mx-auto w-full max-w-xs">
+                        <CardHeader>
+                            <CardTitle className="font-bold text-lg">Applied</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col justify-center items-center flex-1">
+                            <div className="text-3xl font-semibold">
+                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="flex flex-col mx-auto w-full max-w-xs">
+                        <CardHeader>
+                            <CardTitle className="font-bold text-lg">Shortlisted</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col justify-center items-center flex-1">
+                            <div className="text-3xl font-semibold">
+                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.SHORTLISTED))?.length ?? 0}
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card className="flex flex-col mx-auto w-full max-w-xs">
+                        <CardHeader>
+                            <CardTitle className="font-bold text-lg">Rejected</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex flex-col justify-center items-center flex-1">
+                            <div className="text-3xl font-semibold">
+                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.REJECTED))?.length ?? 0}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
             <div className="grid grid-cols-1 gap-4 mt-4">
-                <div className="text-2xl font-bold bg-card text-card-foreground shadow-sm ring-1 ring-border p-4 rounded-md">
-                    Tracking Sites
-                </div>
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="font-bold text-lg">Company Application Tracking Sites</CardTitle>
+                    </CardHeader>
+                    <CardContent className="-mb-(--card-spacing)">
+                        <ScrollArea className="h-72 rounded-md flex-2 flex items-center mt-2 text-3xl font-semibold">
+                            <DataTable
+                                columns={columns.filter((column) => {
+                                    return (column.id === "company" || column.id === "position" || column.id === "workMode")
+                                })}
+                                data={filteredData}
+                                header={false}
+                                searchBar={false}
+                                pagination={false}
+                            />
+                        </ScrollArea>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     )

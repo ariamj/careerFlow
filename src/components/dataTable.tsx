@@ -33,11 +33,17 @@ import { SearchIcon, XIcon } from "lucide-react";
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    header?: boolean
+    searchBar?: boolean
+    pagination?: boolean
 }
 
 export function DataTable<TData, TValue>({
     columns,
     data,
+    header = true,
+    searchBar = true,
+    pagination = true
 }: DataTableProps<TData, TValue>) {
     const [pageSize, setPageSize] = React.useState<PaginationState>({
         pageIndex: 0,
@@ -68,56 +74,60 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-            <div className="flex items-center py-4">
-                <InputGroup className="max-w-sm">
-                    <InputGroupInput
-                        placeholder="Search applications..."
-                        value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
-                        onChange={(event) => table.getColumn("company")?.setFilterValue(event.target.value)}
-                    />
-                    <InputGroupAddon align="inline-start">
-                        <SearchIcon className="text-muted-foreground" />
-                    </InputGroupAddon>
-                    {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
-                        <InputGroupAddon align="inline-end">
-                            <InputGroupButton
-                                onClick={() => table.resetColumnFilters()}
-                                className="rounded-full cursor-pointer p-1"
-                            >
-                                <XIcon />
-                                <span className="sr-only">Clear filters</span>
-                            </InputGroupButton>
+            {searchBar && (
+                <div className="flex items-center py-4">
+                    <InputGroup className="max-w-sm">
+                        <InputGroupInput
+                            placeholder="Search applications..."
+                            value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
+                            onChange={(event) => table.getColumn("company")?.setFilterValue(event.target.value)}
+                        />
+                        <InputGroupAddon align="inline-start">
+                            <SearchIcon className="text-muted-foreground" />
                         </InputGroupAddon>
-                    )}
-                    <InputGroupAddon align="inline-end">
-                        {
-                            table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length
-                            ? ""
-                            : `${table.getFilteredRowModel().rows.length} results`
-                        }
-                    </InputGroupAddon>
-                </InputGroup>
-            </div>
+                        {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
+                            <InputGroupAddon align="inline-end">
+                                <InputGroupButton
+                                    onClick={() => table.resetColumnFilters()}
+                                    className="rounded-full cursor-pointer p-1"
+                                >
+                                    <XIcon />
+                                    <span className="sr-only">Clear filters</span>
+                                </InputGroupButton>
+                            </InputGroupAddon>
+                        )}
+                        <InputGroupAddon align="inline-end">
+                            {
+                                table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length
+                                ? ""
+                                : `${table.getFilteredRowModel().rows.length} results`
+                            }
+                        </InputGroupAddon>
+                    </InputGroup>
+                </div>
+            )}
             <div className="overflow-hidden rounded-md">
                 <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id} className="bg-primary hover:bg-primary">
-                                {headerGroup.headers.map((header) => {
-                                    return (
-                                        <TableHead key={header.id} className="text-bold text-primary-foreground">
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </TableHead>
-                                    )
-                                })}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
+                    {header && (
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id} className="bg-primary hover:bg-primary">
+                                    {headerGroup.headers.map((header) => {
+                                        return (
+                                            <TableHead key={header.id} className="text-bold text-primary-foreground">
+                                                {header.isPlaceholder
+                                                    ? null
+                                                    : flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext()
+                                                    )}
+                                            </TableHead>
+                                        )
+                                    })}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                    )}
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
@@ -142,34 +152,36 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between py-4">
-                <div className="text-sm text-muted-foreground justify-start">
-                    {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                    {table.getFilteredRowModel().rows.length} row(s) selected.
+            {pagination && (
+                <div className="flex items-center justify-between py-4">
+                    <div className="text-sm text-muted-foreground justify-start">
+                        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+                        {table.getFilteredRowModel().rows.length} row(s) selected.
+                    </div>
+                    <div className="flex-2 w-[100px] items-center justify-center text-sm font-medium">
+                        Page {table.getState().pagination.pageIndex + 1} of{" "}
+                        {table.getPageCount()}
+                    </div>
+                    <div className="items-center justify-end space-x-2">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.previousPage()}
+                            disabled={!table.getCanPreviousPage()}
+                        >
+                            Previous
+                        </Button>
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => table.nextPage()}
+                            disabled={!table.getCanNextPage()}
+                        >
+                            Next
+                        </Button>
+                    </div>
                 </div>
-                <div className="flex-2 w-[100px] items-center justify-center text-sm font-medium">
-                    Page {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getPageCount()}
-                </div>
-                <div className="items-center justify-end space-x-2">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
-                    >
-                        Previous
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
-                    >
-                        Next
-                    </Button>
-                </div>
-            </div>
+            )}
         </div>
     )
 }

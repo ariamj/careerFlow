@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { DataTable } from '@/components/dataTable'
 import { columns } from '@/components/columns'
 import { applicationQueryOptions } from '@/utils/queries'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { DataTable } from '@/components/dataTable'
 
 function ApplicationsPage() {
     const queryClient = useQueryClient()
