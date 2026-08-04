@@ -7,6 +7,7 @@ import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS } from '@/utils/types';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react';
+import { Responsive, useContainerWidth } from 'react-grid-layout';
 
 function DashboardPage() {
     const {data: data} = useQuery(applicationQueryOptions)
@@ -14,87 +15,120 @@ function DashboardPage() {
         return data?.filter((application) => application.interest?.value === INTEREST_LEVEL_OPTIONS.HIGH.value) ?? [];
     }, [data])
 
+    const { width, containerRef, mounted } = useContainerWidth();
+    const layouts = {
+        md: [
+            { i: "top-shortlist", x: 0, y: 0, w: 2, h: 2, minW: 2, minH: 2 },
+            { i: "total-applications", x: 2, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "applied", x: 3, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "shortlisted", x: 2, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "rejected", x: 3, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "company-app-sites", x: 0, y: 2, w: 4, h: 2.5, minW: 4, minH: 2 },
+        ],
+        sm: [
+            { i: "top-shortlist", x: 0, y: 2, w: 2, h: 2, minW: 2, minH: 2 },
+            { i: "total-applications", x: 0, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "applied", x: 1, y: 0, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "shortlisted", x: 0, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "rejected", x: 1, y: 1, w: 1, h: 1, minW: 1, minH: 1 },
+            { i: "company-app-sites", x: 0, y: 3, w: 2, h: 2.5, minW: 2, minH: 2 },
+        ],
+        xs: [
+            { i: "top-shortlist", x: 0, y: 0, w: 2, h: 2, static: true },
+            { i: "total-applications", x: 0, y: 0, w: 1, h: 1, static: true },
+            { i: "applied", x: 0, y: 1, w: 1, h: 1, static: true },
+            { i: "shortlisted", x: 0, y: 2, w: 1, h: 1, static: true },
+            { i: "rejected", x: 0, y: 3, w: 1, h: 1, static: true },
+            { i: "company-app-sites", x: 0, y: 5, w: 1, h: 2.5, static: true },
+        ],
+    }
+
     return (
         <div>
-            <div className="grid grid-cols-2 gap-4">
-                <Card className="text-xl font-bold bg-card text-card-foreground shadow-sm ring-1 ring-border p-4 rounded-md">
-                    <CardHeader>
-                        <CardTitle className="font-bold text-lg">Top Shortlist</CardTitle>
-                    </CardHeader>
-                    <CardContent className="-mb-(--card-spacing)">
-                        <ScrollArea className="h-72 rounded-md flex-2 flex items-center mt-2 text-3xl font-semibold -mx-(--card-spacing)">
-                            <DataTable
-                                columns={columns.filter((column) => {
-                                    return (column.id === "company" || column.id === "position" || column.id === "workMode")
-                                })}
-                                data={filteredData}
-                                header={false}
-                                searchBar={false}
-                                pagination={false}
-                            />
-                        </ScrollArea>
-                    </CardContent>
-                </Card>
-                <div className="grid grid-cols-2 grid-rows-2 gap-4">
-                    <Card className="flex flex-col mx-auto w-full max-w-xs">
-                        <CardHeader>
-                            <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col justify-center items-center flex-1">
-                            <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex flex-col mx-auto w-full max-w-xs">
-                        <CardHeader>
-                            <CardTitle className="font-bold text-lg">Applied</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col justify-center items-center flex-1">
-                            <div className="text-3xl font-semibold">
-                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex flex-col mx-auto w-full max-w-xs">
-                        <CardHeader>
-                            <CardTitle className="font-bold text-lg">Shortlisted</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col justify-center items-center flex-1">
-                            <div className="text-3xl font-semibold">
-                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.SHORTLISTED))?.length ?? 0}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card className="flex flex-col mx-auto w-full max-w-xs">
-                        <CardHeader>
-                            <CardTitle className="font-bold text-lg">Rejected</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex flex-col justify-center items-center flex-1">
-                            <div className="text-3xl font-semibold">
-                                {data?.filter((application) => application.status.includes(STATUS_OPTIONS.REJECTED))?.length ?? 0}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-            </div>
-            <div className="grid grid-cols-1 gap-4 mt-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="font-bold text-lg">Company Application Tracking Sites</CardTitle>
-                    </CardHeader>
-                    <CardContent className="-mb-(--card-spacing)">
-                        <ScrollArea className="h-72 rounded-md flex-2 flex items-center mt-2 text-3xl font-semibold">
-                            <DataTable
-                                columns={columns.filter((column) => {
-                                    return (column.id === "company" || column.id === "position" || column.id === "workMode")
-                                })}
-                                data={filteredData}
-                                header={false}
-                                searchBar={false}
-                                pagination={false}
-                            />
-                        </ScrollArea>
-                    </CardContent>
-                </Card>
+            <div ref={containerRef}>
+                {mounted && (
+                    <Responsive
+                        layouts={layouts}
+                        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480 }}
+                        cols={{ lg: 4, md: 4, sm: 2, xs: 1 }}
+                        width={width}
+                    >
+                        <Card key="top-shortlist" className="text-xl font-bold">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Top Shortlist</CardTitle>
+                            </CardHeader>
+                            <CardContent className="-mb-(--card-spacing)">
+                                <ScrollArea className="h-100 flex-2 flex items-center">
+                                    <DataTable
+                                        columns={columns.filter((column) => {
+                                            return (column.id === "company" || column.id === "position" || column.id === "workMode")
+                                        })}
+                                        data={filteredData}
+                                        header={false}
+                                        searchBar={false}
+                                        pagination={false}
+                                    />
+                                </ScrollArea>
+                            </CardContent>
+                        </Card>
+                        <Card key="total-applications" className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col justify-center items-center flex-1">
+                                <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
+                            </CardContent>
+                        </Card>
+                        <Card key="applied" className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Applied</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col justify-center items-center flex-1">
+                                <div className="text-3xl font-semibold">
+                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card key="shortlisted" className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Shortlisted</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col justify-center items-center flex-1">
+                                <div className="text-3xl font-semibold">
+                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.SHORTLISTED))?.length ?? 0}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card key="rejected" className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Rejected</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col justify-center items-center flex-1">
+                                <div className="text-3xl font-semibold">
+                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.REJECTED))?.length ?? 0}
+                                </div>
+                            </CardContent>
+                        </Card>
+                        <Card key="company-app-sites">
+                            <CardHeader>
+                                <CardTitle className="font-bold text-lg">Company Application Tracking Sites</CardTitle>
+                            </CardHeader>
+                            <CardContent className="-mb-(--card-spacing)">
+                                <ScrollArea className="h-72 rounded-md flex-2 flex items-center">
+                                    <DataTable
+                                        columns={columns.filter((column) => {
+                                            return (column.id === "company" || column.id === "position" || column.id === "workMode")
+                                        })}
+                                        data={filteredData}
+                                        header={false}
+                                        searchBar={false}
+                                        pagination={false}
+                                    />
+                                </ScrollArea>
+                            </CardContent>
+                        </Card>
+                    </Responsive>
+                )}
             </div>
         </div>
     )
