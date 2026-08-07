@@ -10,19 +10,15 @@
 
 import { Route as rootRouteImport } from './pages/__root'
 import { Route as IndexRouteImport } from './pages/index'
-import { Route as ApplicationsRouteImport } from './pages/Applications'
 import { Route as DashboardRouteImport } from './pages/Dashboard'
 import { Route as MyProfileRouteImport } from './pages/MyProfile'
 import { Route as PostingArchiveRouteImport } from './pages/PostingArchive'
+import { Route as ApplicationsIndexRouteImport } from './pages/Applications.index'
+import { Route as ApplicationsApplicationIdRouteImport } from './pages/Applications.$applicationId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApplicationsRoute = ApplicationsRouteImport.update({
-  id: '/Applications',
-  path: '/Applications',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -40,50 +36,77 @@ const PostingArchiveRoute = PostingArchiveRouteImport.update({
   path: '/PostingArchive',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApplicationsIndexRoute = ApplicationsIndexRouteImport.update({
+  id: '/Applications/',
+  path: '/Applications/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApplicationsApplicationIdRoute =
+  ApplicationsApplicationIdRouteImport.update({
+    id: '/Applications/$applicationId',
+    path: '/Applications/$applicationId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/Applications': typeof ApplicationsRoute
   '/Dashboard': typeof DashboardRoute
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
+  '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/Applications': typeof ApplicationsRoute
   '/Dashboard': typeof DashboardRoute
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
+  '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/Applications': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/Applications': typeof ApplicationsRoute
   '/Dashboard': typeof DashboardRoute
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
+  '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/Applications' | '/Dashboard' | '/MyProfile' | '/PostingArchive'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/Applications' | '/Dashboard' | '/MyProfile' | '/PostingArchive'
-  id:
-    | '__root__'
     | '/'
-    | '/Applications'
     | '/Dashboard'
     | '/MyProfile'
     | '/PostingArchive'
+    | '/Applications/$applicationId'
+    | '/Applications/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/Dashboard'
+    | '/MyProfile'
+    | '/PostingArchive'
+    | '/Applications/$applicationId'
+    | '/Applications'
+  id:
+    | '__root__'
+    | '/'
+    | '/Dashboard'
+    | '/MyProfile'
+    | '/PostingArchive'
+    | '/Applications/$applicationId'
+    | '/Applications/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ApplicationsRoute: typeof ApplicationsRoute
   DashboardRoute: typeof DashboardRoute
   MyProfileRoute: typeof MyProfileRoute
   PostingArchiveRoute: typeof PostingArchiveRoute
+  ApplicationsApplicationIdRoute: typeof ApplicationsApplicationIdRoute
+  ApplicationsIndexRoute: typeof ApplicationsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -93,13 +116,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/Applications': {
-      id: '/Applications'
-      path: '/Applications'
-      fullPath: '/Applications'
-      preLoaderRoute: typeof ApplicationsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/Dashboard': {
@@ -123,15 +139,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PostingArchiveRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/Applications/': {
+      id: '/Applications/'
+      path: '/Applications'
+      fullPath: '/Applications/'
+      preLoaderRoute: typeof ApplicationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/Applications/$applicationId': {
+      id: '/Applications/$applicationId'
+      path: '/Applications/$applicationId'
+      fullPath: '/Applications/$applicationId'
+      preLoaderRoute: typeof ApplicationsApplicationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ApplicationsRoute: ApplicationsRoute,
   DashboardRoute: DashboardRoute,
   MyProfileRoute: MyProfileRoute,
   PostingArchiveRoute: PostingArchiveRoute,
+  ApplicationsApplicationIdRoute: ApplicationsApplicationIdRoute,
+  ApplicationsIndexRoute: ApplicationsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

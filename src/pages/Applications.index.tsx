@@ -1,8 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { columns } from '@/components/columns'
 import { applicationQueryOptions } from '@/utils/queries'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DataTable } from '@/components/dataTable'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { STATUS_OPTIONS } from '@/utils/types'
 
 function ApplicationsPage() {
     const queryClient = useQueryClient()
@@ -31,23 +33,37 @@ function ApplicationsPage() {
 
     return (
         <div className="space-y-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="rounded-2xl bg-card p-5 text-card-foreground shadow-sm ring-1 ring-border">
-                    <div className="text-sm uppercase tracking-[0.2em]">Total Applications</div>
-                    <div className="mt-2 text-3xl font-semibold">{data?.length ?? 0}</div>
-                </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <Card key="total-applications" className="flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col justify-center items-center flex-1">
+                        <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
+                    </CardContent>
+                </Card>
+                <Card key="applied" className="flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="font-bold text-lg">Applied</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex flex-col justify-center items-center flex-1">
+                        <div className="text-3xl font-semibold">
+                            {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
-            <div className="rounded-3xl bg-card p-6 text-card-foreground shadow-sm ring-1 ring-border">
+            <Card className="p-6">
                 <DataTable
                     columns={columns}
                     data={data? data : []}
                 />
-            </div>
+            </Card>
         </div>
     )
 }
 
-export const Route = createFileRoute('/Applications')({
+export const Route = createFileRoute('/Applications/')({
     loader: async ({ context: { queryClient } }) => {
         return queryClient
             .ensureQueryData(applicationQueryOptions)

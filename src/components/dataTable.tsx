@@ -9,7 +9,6 @@ import {
     getSortedRowModel,
     useReactTable,
     type ColumnDef,
-    type ColumnFiltersState,
     type PaginationState,
     type SortingState
 } from "@tanstack/react-table";
@@ -50,8 +49,8 @@ export function DataTable<TData, TValue>({
         pageSize: 20,
     })
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
     const [rowSelection, setRowSelection] = React.useState({})
+    const [globalFilter, setGlobalFilter] = React.useState<any>([])
 
     const table = useReactTable({
         data: data ?? [],
@@ -61,14 +60,15 @@ export function DataTable<TData, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
-        onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         onRowSelectionChange: setRowSelection,
+        globalFilterFn: "includesString",
+        onGlobalFilterChange: setGlobalFilter,
         state: {
             pagination: pageSize,
             sorting,
-            columnFilters,
-            rowSelection
+            rowSelection,
+            globalFilter
         },
     })
 
@@ -79,8 +79,8 @@ export function DataTable<TData, TValue>({
                     <InputGroup className="max-w-sm">
                         <InputGroupInput
                             placeholder="Search applications..."
-                            value={(table.getColumn("company")?.getFilterValue() as string) ?? ""}
-                            onChange={(event) => table.getColumn("company")?.setFilterValue(event.target.value)}
+                            value={table.getState().globalFilter ?? ""}
+                            onChange={(event) => table.setGlobalFilter(String(event.target.value))}
                         />
                         <InputGroupAddon align="inline-start">
                             <SearchIcon className="text-muted-foreground" />
@@ -88,7 +88,7 @@ export function DataTable<TData, TValue>({
                         {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
                             <InputGroupAddon align="inline-end">
                                 <InputGroupButton
-                                    onClick={() => table.resetColumnFilters()}
+                                    onClick={() => table.resetGlobalFilter()}
                                     className="rounded-full cursor-pointer p-1"
                                 >
                                     <XIcon />
