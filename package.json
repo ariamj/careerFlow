@@ -1,5 +1,5 @@
 {
-  "name": "my-saas-monorepo",
+  "name": "careerFlow",
   "private": true,
   "workspaces": [
     "apps/*",
