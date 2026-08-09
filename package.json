@@ -1,6 +1,7 @@
 {
   "name": "careerFlow",
   "private": true,
+  "packageManager": "npm@11.16.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -10,6 +11,6 @@
     "build": "turbo run build"
   },
   "devDependencies": {
-    "turbo": "^2.0.0"
+    "turbo": "^2.10.9"
   }
 }

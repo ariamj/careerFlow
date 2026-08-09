@@ -9,7 +9,7 @@
     "db:push": "drizzle-kit push"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.9.5",
+    "@neondatabase/serverless": "^1.1.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "pg": "^8.22.0"
@@ -17,6 +17,6 @@
   "devDependencies": {
     "@types/pg": "^8.11.6",
     "drizzle-kit": "^0.31.10",
-    "typescript": "^5.0.0"
+    "typescript": "~6.0.2"
   }
 }

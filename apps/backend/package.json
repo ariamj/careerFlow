@@ -1,0 +1,19 @@
+{
+  "name": "@careerFlow/backend",
+  "version": "0.0.0",
+  "private": true,
+  "main": "api/index.ts",
+  "scripts": {
+    "dev": "tsx watch api/index.ts --port 3000"
+  },
+  "dependencies": {
+    "@careerFlow/database": "*",
+    "@neondatabase/serverless": "^1.1.0",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.13.1"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.11",
+    "typescript": "~6.0.2"
+  }
+}
