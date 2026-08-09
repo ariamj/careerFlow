@@ -2,9 +2,10 @@
   "name": "@careerFlow/backend",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "main": "api/index.ts",
   "scripts": {
-    "dev": "tsx watch api/index.ts --port 3000"
+    "start": "echo 'Vercel CLI takes over local routing automatically'"
   },
   "dependencies": {
     "@careerFlow/database": "*",

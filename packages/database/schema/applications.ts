@@ -1,20 +1,12 @@
 import { pgTable, uuid, text, timestamp, pgEnum } from 'drizzle-orm/pg-core';
-import {
-    INTEREST_LEVEL_OPTIONS,
-    InterestLevelKey,
-    WORK_MODE_OPTIONS,
-    WorkModeKey,
-    STATUS_OPTIONS,
-    StatusKey
-} from '../../../apps/frontend/src/utils/types';
-import { users } from './users';
+import { users } from './users.ts';
 
-const interestLevelKeys = Object.keys(INTEREST_LEVEL_OPTIONS) as [InterestLevelKey, ...InterestLevelKey[]];
-export const interestLevelEnum = pgEnum("interest_levels", interestLevelKeys);
-const workModeKeys = Object.keys(WORK_MODE_OPTIONS) as [WorkModeKey, ...WorkModeKey[]];
-export const workModeEnum = pgEnum("work_modes", workModeKeys);
-const statusKeys = Object.keys(STATUS_OPTIONS) as [StatusKey, ...StatusKey[]];
-export const statusEnum = pgEnum("statuses", statusKeys);
+const interestLevelKeys = ['LOW', 'MEDIUM', 'HIGH'] as const;
+export const interestLevelEnum = pgEnum('interest_levels', interestLevelKeys);
+const workModeKeys = ['REMOTE', 'ON_SITE', 'HYBRID'] as const;
+export const workModeEnum = pgEnum('work_modes', workModeKeys);
+const statusKeys = ['SHORTLISTED', 'APPLIED', 'REJECTED'] as const;
+export const statusEnum = pgEnum('statuses', statusKeys);
 
 export const applications = pgTable('applications', {
     id: uuid('id').defaultRandom().primaryKey(),

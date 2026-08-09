@@ -1,13 +1,14 @@
 {
   "name": "careerFlow",
   "private": true,
+  "type": "module",
   "packageManager": "npm@11.16.0",
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel & vercel dev apps/backend --listen 3000",
     "build": "turbo run build"
   },
   "devDependencies": {

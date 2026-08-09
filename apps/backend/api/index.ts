@@ -1,14 +1,19 @@
-import { config } from 'dotenv';
-config({ path: '../../.env' });
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
 import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import { applications } from '@careerFlow/database';
+import { drizzle, NeonHttpDatabase } from 'drizzle-orm/neon-http';
+import { applicationsApp } from '../api-routes/applications.ts';
+import { testApp } from '../api-routes/test.ts';
 
+type Env = {
+    Variables: {
+        db: NeonHttpDatabase;
+    };
+};
 
-const app = new Hono().basePath('/api/');
+export const runtime = 'edge';
+const app = new Hono<Env>().basePath('/api/');
 
 app.use('*', cors({
     origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -16,37 +21,29 @@ app.use('*', cors({
     allowHeaders: ['Content-Type', 'Authorization'],
 }));
 
-const sql = neon(process.env.POOLED_DATABASE_URL!);
-const db = drizzle(sql);
+let db: NeonHttpDatabase;
 
-// GET all applications from database
-app.get('/applications', async (c) => {
-    try {
-        const allApplications = await db.select().from(applications);
-        return c.json(allApplications);
-    } catch (error) {
-        return c.json({ error: 'Failed to retrieve database applications' }, 500);
+try {
+    if (!process.env.POOLED_DATABASE_URL) {
+        throw new Error('POOLED_DATABASE_URL is not defined in the environment variables.');
     }
+    const sql = neon(process.env.POOLED_DATABASE_URL!);
+    db = drizzle({client: sql});
+} catch (error: any) {
+    console.error(error.message);
+}
+
+
+app.use('*', async (c, next) => {
+    c.set('db', db);
+    await next();
 });
 
-app.post('/applications', async (c) => {
-    try {
-        const body = await c.req.json();
-        const newApplication = await db.insert(applications).values({
-            company: body.company,
-            position: body.position,
-            workMode: body.workMode,
-            interest: body.interest,
-            applyDate: body.applyDate,
-            status: body.status,
-            userId: body.userId,
-        }).returning();
+app.get('/', (c) => c.json({ message: 'Welcome to the CareerFlow API!' }));
+app.get('/testing', (c) => c.json({ message: 'Testing route is working!', ok: "hello world!" }));
 
-        return c.json(newApplication, 201);
-    } catch (error) {
-        return c.json({ error: 'Failed to create new application' }, 500);
-    }
-});
+app.route('/', applicationsApp);
+app.route('/', testApp);
 
-
-export default handle(app);
+export const GET = handle(app);
+// export default handle(app);

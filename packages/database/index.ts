@@ -1,2 +1,2 @@
-export * from './schema/users';
-export * from './schema/applications';
+export * from './schema/users.ts';
+export * from './schema/applications.ts';
