@@ -12,10 +12,10 @@ import {
 import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
-import { type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
 import { Badge } from '@/components/ui/badge'
 
-export const columns: ColumnDef<Application>[] = [
+export const applicationColumns: ColumnDef<Application>[] = [
     {
         id: "select",
         header: ({table}) => (
@@ -44,7 +44,8 @@ export const columns: ColumnDef<Application>[] = [
         accessorKey: "interest",
         header: "",
         cell: ({row}) => {
-            const interest = row.getValue("interest") as InterestLevel
+            const interest = row.getValue("interest") as InterestLevel | undefined
+            // const interest = INTEREST_LEVEL_OPTIONS[row.getValue("interest") as keyof typeof INTEREST_LEVEL_OPTIONS] as InterestLevel | undefined
 
             return (
                 <div className="text-left">
@@ -103,7 +104,8 @@ export const columns: ColumnDef<Application>[] = [
         accessorKey: "workMode",
         header: "Work Mode",
         cell: ({row}) => {
-            const workMode = row.getValue("workMode") as WorkMode
+            const workMode = row.getValue("workMode") as WorkMode | undefined
+            // const workMode = WORK_MODE_OPTIONS[row.getValue("workMode") as keyof typeof WORK_MODE_OPTIONS] as WorkMode | undefined
             return (
                 <div className="text-left">
                     {workMode? (
@@ -128,7 +130,7 @@ export const columns: ColumnDef<Application>[] = [
         accessorKey: "applyDate",
         header: "Date Applied",
         cell: ({row}) => {
-            const applyDate = row.getValue("applyDate") as Date
+            const applyDate = new Date(row.getValue("applyDate"))
             return (
                 <div className="text-left">
                     {applyDate.toLocaleDateString("en-US", {
@@ -145,10 +147,15 @@ export const columns: ColumnDef<Application>[] = [
         accessorKey: "status",
         header: "Status",
         cell: ({row}) => {
-            const status_list = row.getValue("status") as Status[]
+            const statuses = row.getValue("status") as Status[]
+            // const status_list = row.getValue("status") as string[]
+            // const statuses = status_list.map((status: string) => {
+            //     return STATUS_OPTIONS[status as keyof typeof STATUS_OPTIONS] as Status
+            // })
+            // console.log("Status value:", status_list, "type", typeof status_list)
             return (
                 <div className="text-left flex flex-wrap gap-1">
-                    {status_list.map((status) => (
+                    {statuses.map((status) => (
                         <Badge
                             variant="secondary"
                             key={status.value}

@@ -1,4 +1,4 @@
-import { columns } from '@/components/columns'
+import { applicationColumns } from '@/components/applicationColumns'
 import { DataTable } from '@/components/dataTable'
 import { fetchApplications } from '@/services/dataApi'
 import { createFileRoute } from '@tanstack/react-router'
@@ -8,7 +8,7 @@ function PostingArchivePage() {
 
     return (
         <div className="rounded-3xl bg-card p-6 text-card-foreground shadow-sm ring-1 ring-border">
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={applicationColumns} data={data} />
         </div>
     )
 }

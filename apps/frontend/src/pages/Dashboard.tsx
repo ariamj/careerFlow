@@ -1,8 +1,8 @@
-import { columns } from '@/components/columns';
+import { applicationColumns } from '@/components/applicationColumns';
 import { DataTable } from '@/components/dataTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { applicationQueryOptions } from '@/utils/queries';
+import { getApplicationsData } from '@/services/queries';
 import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS } from '@/utils/types';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
@@ -10,10 +10,10 @@ import { useMemo } from 'react';
 import { Responsive, useContainerWidth } from 'react-grid-layout';
 
 function DashboardPage() {
-    const {data: data} = useQuery(applicationQueryOptions)
+    const {data: applicationsData} = useQuery(getApplicationsData)
     const filteredData = useMemo(() => {
-        return data?.filter((application) => application.interest?.value === INTEREST_LEVEL_OPTIONS.HIGH.value) ?? [];
-    }, [data])
+        return applicationsData?.filter((application) => application.interest?.value === INTEREST_LEVEL_OPTIONS.HIGH.value) ?? [];
+    }, [applicationsData])
 
     const { width, containerRef, mounted } = useContainerWidth();
     const layouts = {
@@ -68,7 +68,7 @@ function DashboardPage() {
                             <CardContent className="-mb-(--card-spacing)">
                                 <ScrollArea className="h-100 flex-2 flex items-center">
                                     <DataTable
-                                        columns={columns.filter((column) => {
+                                        columns={applicationColumns.filter((column) => {
                                             return (column.id === "company" || column.id === "position" || column.id === "workMode")
                                         })}
                                         data={filteredData}
@@ -84,7 +84,7 @@ function DashboardPage() {
                                 <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
                             </CardHeader>
                             <CardContent className="flex flex-col justify-center items-center flex-1">
-                                <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
+                                <div className="text-3xl font-semibold">{applicationsData?.length ?? 0}</div>
                             </CardContent>
                         </Card>
                         <Card key="applied" className="flex flex-col">
@@ -93,7 +93,7 @@ function DashboardPage() {
                             </CardHeader>
                             <CardContent className="flex flex-col justify-center items-center flex-1">
                                 <div className="text-3xl font-semibold">
-                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
+                                    {applicationsData?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
                                 </div>
                             </CardContent>
                         </Card>
@@ -103,7 +103,7 @@ function DashboardPage() {
                             </CardHeader>
                             <CardContent className="flex flex-col justify-center items-center flex-1">
                                 <div className="text-3xl font-semibold">
-                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.SHORTLISTED))?.length ?? 0}
+                                    {applicationsData?.filter((application) => application.status.includes(STATUS_OPTIONS.SHORTLISTED))?.length ?? 0}
                                 </div>
                             </CardContent>
                         </Card>
@@ -113,7 +113,7 @@ function DashboardPage() {
                             </CardHeader>
                             <CardContent className="flex flex-col justify-center items-center flex-1">
                                 <div className="text-3xl font-semibold">
-                                    {data?.filter((application) => application.status.includes(STATUS_OPTIONS.REJECTED))?.length ?? 0}
+                                    {applicationsData?.filter((application) => application.status.includes(STATUS_OPTIONS.REJECTED))?.length ?? 0}
                                 </div>
                             </CardContent>
                         </Card>
@@ -124,7 +124,7 @@ function DashboardPage() {
                             <CardContent className="-mb-(--card-spacing)">
                                 <ScrollArea className="h-72 rounded-md flex-2 flex items-center">
                                     <DataTable
-                                        columns={columns.filter((column) => {
+                                        columns={applicationColumns.filter((column) => {
                                             return (column.id === "company" || column.id === "position" || column.id === "workMode")
                                         })}
                                         data={filteredData}
@@ -146,7 +146,7 @@ function DashboardPage() {
 export const Route = createFileRoute('/Dashboard')({
     loader: async ({ context: { queryClient } }) => {
         return queryClient
-            .ensureQueryData(applicationQueryOptions)
+            .ensureQueryData(getApplicationsData)
             .catch((err) => {
                 console.error("The loader for the Applications route failed to fetch data:", err);
                 // throw err; // Re-throw the error to propagate it to the route's error boundary

@@ -1,6 +1,6 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
-import { columns } from '@/components/columns'
-import { applicationQueryOptions } from '@/utils/queries'
+import { applicationColumns } from '@/components/applicationColumns'
+import { getApplicationsData } from '@/services/queries'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DataTable } from '@/components/dataTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,7 +8,7 @@ import { STATUS_OPTIONS } from '@/utils/types'
 
 function ApplicationsPage() {
     const queryClient = useQueryClient()
-    const {data: data} = useQuery(applicationQueryOptions)
+    const {data: applicationsData} = useQuery(getApplicationsData)
 
     const updateData = useMutation({
         mutationFn: (updated: {
@@ -39,7 +39,7 @@ function ApplicationsPage() {
                         <CardTitle className="font-bold text-lg">Total Applications</CardTitle>
                     </CardHeader>
                     <CardContent className="flex flex-col justify-center items-center flex-1">
-                        <div className="text-3xl font-semibold">{data?.length ?? 0}</div>
+                        <div className="text-3xl font-semibold">{applicationsData?.length ?? 0}</div>
                     </CardContent>
                 </Card>
                 <Card key="applied" className="flex flex-col">
@@ -48,15 +48,15 @@ function ApplicationsPage() {
                     </CardHeader>
                     <CardContent className="flex flex-col justify-center items-center flex-1">
                         <div className="text-3xl font-semibold">
-                            {data?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
+                            {applicationsData?.filter((application) => application.status.includes(STATUS_OPTIONS.APPLIED))?.length ?? 0}
                         </div>
                     </CardContent>
                 </Card>
             </div>
             <Card className="p-6">
                 <DataTable
-                    columns={columns}
-                    data={data? data : []}
+                    columns={applicationColumns}
+                    data={applicationsData? applicationsData : []}
                 />
             </Card>
         </div>
@@ -66,7 +66,7 @@ function ApplicationsPage() {
 export const Route = createFileRoute('/Applications/')({
     loader: async ({ context: { queryClient } }) => {
         return queryClient
-            .ensureQueryData(applicationQueryOptions)
+            .ensureQueryData(getApplicationsData)
             .catch((err) => {
                 console.error("The loader for the Applications route failed to fetch data:", err);
                 // throw err; // Re-throw the error to propagate it to the route's error boundary
