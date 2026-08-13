@@ -12,7 +12,7 @@ import {
 import { ArrowUpDown, MoreHorizontal, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from './ui/checkbox'
-import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
+import { type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
 import { Badge } from '@/components/ui/badge'
 
 export const applicationColumns: ColumnDef<Application>[] = [

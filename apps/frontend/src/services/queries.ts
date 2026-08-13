@@ -8,7 +8,6 @@ import {
     STATUS_OPTIONS,
     WORK_MODE_OPTIONS
 } from '../utils/types'
-import { fetchApplications } from '@/services/dataApi'
 
 const API_BASE_URL = "http://localhost:3000"
 
@@ -28,10 +27,6 @@ export const getApplicationsData = queryOptions({
             applyDate: new Date(application.applyDate),
             status: application.status.map((status: string) => STATUS_OPTIONS[status as keyof typeof STATUS_OPTIONS] as Status)
         }));
-        // return response.json() as Promise<Application[]>
-        
-        // const response = await fetchApplications() // Use the mock fetch function
-        // return response
         
     },
     staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes

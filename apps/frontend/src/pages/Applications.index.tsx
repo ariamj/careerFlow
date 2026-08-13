@@ -1,35 +1,36 @@
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { applicationColumns } from '@/components/applicationColumns'
 import { getApplicationsData } from '@/services/queries'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+// import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { DataTable } from '@/components/dataTable'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { STATUS_OPTIONS } from '@/utils/types'
 
 function ApplicationsPage() {
-    const queryClient = useQueryClient()
+    // const queryClient = useQueryClient()
     const {data: applicationsData} = useQuery(getApplicationsData)
 
-    const updateData = useMutation({
-        mutationFn: (updated: {
-            id: string;
-            company: string
-            position: string
-            workMode: string
-            interest: string
-        }) => {
-            return fetch(`/api/applications/${updated.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updated),
-            }).then((res) => res.json())
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({queryKey: ['applications']})
-        },
-    })
+    // const updateData = useMutation({
+    //     mutationFn: (updated: {
+    //         id: string;
+    //         company: string
+    //         position: string
+    //         workMode: string
+    //         interest: string
+    //     }) => {
+    //         return fetch(`/api/applications/${updated.id}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(updated),
+    //         }).then((res) => res.json())
+    //     },
+    //     onSuccess: () => {
+    //         queryClient.invalidateQueries({queryKey: ['applications']})
+    //     },
+    // })
 
     return (
         <div className="space-y-6">
