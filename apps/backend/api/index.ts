@@ -3,8 +3,8 @@ import { cors } from 'hono/cors';
 import { handle } from 'hono/vercel';
 import { neon } from '@neondatabase/serverless';
 import { drizzle, NeonHttpDatabase } from 'drizzle-orm/neon-http';
-import { applicationsApp } from '../api-routes/applications.ts';
-import { testApp } from '../api-routes/test.ts';
+import { applicationsApp } from '../api-routes/applications.js';
+import { testApp } from '../api-routes/test.js';
 
 type Env = {
     Variables: {
@@ -12,7 +12,6 @@ type Env = {
     };
 };
 
-export const runtime = 'edge';
 const app = new Hono<Env>().basePath('/api/');
 
 app.use('*', cors({
@@ -45,5 +44,6 @@ app.get('/testing', (c) => c.json({ message: 'Testing route is working!', ok: "h
 app.route('/', applicationsApp);
 app.route('/', testApp);
 
+export const runtime = 'edge';
 export const GET = handle(app);
 // export default handle(app);
