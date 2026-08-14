@@ -1,5 +1,5 @@
 import { pgTable, uuid, text, timestamp, pgEnum } from 'drizzle-orm/pg-core';
-import { users } from './users.ts';
+import { users } from './users.js';
 
 const interestLevelKeys = ['LOW', 'MEDIUM', 'HIGH'] as const;
 export const interestLevelEnum = pgEnum('interest_levels', interestLevelKeys);
