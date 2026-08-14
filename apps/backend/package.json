@@ -1,5 +1,5 @@
 {
-  "name": "@careerFlow/backend",
+  "name": "@career-flow/backend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
     "start": "echo 'Vercel CLI takes over local routing automatically'"
   },
   "dependencies": {
-    "@careerFlow/database": "*",
+    "@career-flow/database": "*",
     "@neondatabase/serverless": "^1.1.0",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.13.1"

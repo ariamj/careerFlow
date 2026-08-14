@@ -1,5 +1,5 @@
 
-import { applications } from '@careerFlow/database/schema/applications.ts';
+import { applications } from '@career-flow/database/schema/applications.ts';
 import { Hono } from 'hono';
 
 const applicationsApp = new Hono<{ Variables: { db: any } }>()
