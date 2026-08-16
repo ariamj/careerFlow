@@ -9,12 +9,12 @@ import {
     WORK_MODE_OPTIONS
 } from '../utils/types'
 
-const API_BASE_URL = "http://localhost:3000"
+const base_url = import.meta.env.VITE_API_URL || "http://localhost:3000"
 
 export const getApplicationsData = queryOptions({
     queryKey: ['applications'],
     queryFn: async (): Promise<Application[]> => {
-        const response = await fetch(`${API_BASE_URL}/api/applications`)
+        const response = await fetch(`${base_url}/api/applications`)
         if (!response.ok) {
             throw new Error('Network response was not ok')
         }
@@ -35,7 +35,7 @@ export const getApplicationsData = queryOptions({
 export const testQuery = queryOptions({
     queryKey: ['test'],
     queryFn: async () => {
-        const response = await fetch(`${API_BASE_URL}/api/testing`)
+        const response = await fetch(`${base_url}/api/testing`)
         if (!response.ok) {
             throw new Error('Network response was not ok')
         }
