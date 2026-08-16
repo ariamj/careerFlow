@@ -15,7 +15,7 @@ type Env = {
 const app = new Hono<Env>().basePath('/api/');
 
 app.use('*', cors({
-    origin: process.env.BASE_URL || 'http://localhost:5173',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
 }));
