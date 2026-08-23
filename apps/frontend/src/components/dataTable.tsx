@@ -27,7 +27,19 @@ import {
     InputGroupButton,
     InputGroupInput
 } from "@/components/ui/input-group";
-import { SearchIcon, XIcon } from "lucide-react";
+import { PlusIcon, SearchIcon, XIcon } from "lucide-react";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger
+} from "./ui/dialog";
+import { ApplicationForm } from "./applicationForm";
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -35,6 +47,7 @@ interface DataTableProps<TData, TValue> {
     header?: boolean
     searchBar?: boolean
     pagination?: boolean
+    buttons?: boolean
 }
 
 export function DataTable<TData, TValue>({
@@ -42,7 +55,8 @@ export function DataTable<TData, TValue>({
     data,
     header = true,
     searchBar = true,
-    pagination = true
+    pagination = true,
+    buttons = false
 }: DataTableProps<TData, TValue>) {
     const [pageSize, setPageSize] = React.useState<PaginationState>({
         pageIndex: 0,
@@ -72,40 +86,72 @@ export function DataTable<TData, TValue>({
         },
     })
 
+    const createNewApplication = () => {
+        console.log("Create new application button clicked")
+    }
+
     return (
         <div>
-            {searchBar && (
-                <div className="flex items-center py-4">
-                    <InputGroup className="max-w-sm">
-                        <InputGroupInput
-                            placeholder="Search applications..."
-                            value={table.getState().globalFilter ?? ""}
-                            onChange={(event) => table.setGlobalFilter(String(event.target.value))}
-                        />
-                        <InputGroupAddon align="inline-start">
-                            <SearchIcon className="text-muted-foreground" />
-                        </InputGroupAddon>
-                        {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
-                            <InputGroupAddon align="inline-end">
-                                <InputGroupButton
-                                    onClick={() => table.resetGlobalFilter()}
-                                    className="rounded-full cursor-pointer p-1"
-                                >
-                                    <XIcon />
-                                    <span className="sr-only">Clear filters</span>
-                                </InputGroupButton>
+            <div className="flex">
+                {searchBar && (
+                    <div className="flex flex-1 items-center py-4">
+                        <InputGroup className="max-w-sm">
+                            <InputGroupInput
+                                placeholder="Search applications..."
+                                value={table.getState().globalFilter ?? ""}
+                                onChange={(event) => table.setGlobalFilter(String(event.target.value))}
+                            />
+                            <InputGroupAddon align="inline-start">
+                                <SearchIcon className="text-muted-foreground" />
                             </InputGroupAddon>
-                        )}
-                        <InputGroupAddon align="inline-end">
-                            {
-                                table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length
-                                ? ""
-                                : `${table.getFilteredRowModel().rows.length} results`
-                            }
-                        </InputGroupAddon>
-                    </InputGroup>
-                </div>
-            )}
+                            {table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length ? null : (
+                                <InputGroupAddon align="inline-end">
+                                    <InputGroupButton
+                                        onClick={() => table.resetGlobalFilter()}
+                                        className="rounded-full cursor-pointer p-1"
+                                    >
+                                        <XIcon />
+                                        <span className="sr-only">Clear filters</span>
+                                    </InputGroupButton>
+                                </InputGroupAddon>
+                            )}
+                            <InputGroupAddon align="inline-end">
+                                {
+                                    table.getFilteredRowModel().rows.length === table.getCoreRowModel().rows.length
+                                    ? ""
+                                    : `${table.getFilteredRowModel().rows.length} results`
+                                }
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </div>
+                )}
+                {buttons && (
+                    <div className="ml-auto py-4">
+                        <Dialog>
+                            <form>
+                                <DialogTrigger
+                                    render={<Button variant="default" className="cursor-pointer"><PlusIcon /></Button>}
+                                />
+                                <DialogContent className="sm:max-w-md md:max-w-lg lg:max-w-3xl">
+                                    <ScrollArea className="h-[80vh] overflow-y-auto -mx-3.5 px-4">
+                                        <DialogHeader>
+                                            <DialogTitle>New Application</DialogTitle>
+                                            <DialogDescription>Track a new application. Click create when done.</DialogDescription>
+                                        </DialogHeader>
+                                        <ApplicationForm />
+                                    </ScrollArea>
+                                    <DialogFooter>
+                                        <DialogClose
+                                            render={<Button className="cursor-pointer">Cancel</Button>}
+                                        />
+                                        <Button type="submit" className="cursor-pointer">Create</Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </form>
+                        </Dialog>
+                    </div>
+                )}
+            </div>
             <div className="overflow-hidden rounded-md">
                 <Table>
                     {header && (

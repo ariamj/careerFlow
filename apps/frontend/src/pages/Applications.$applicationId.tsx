@@ -1,5 +1,6 @@
+import { ApplicationForm } from "@/components/applicationForm"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getApplicationsData, testQuery } from "@/services/queries"
-import { INTEREST_LEVEL_OPTIONS } from "@/utils/types"
 import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
@@ -10,39 +11,14 @@ function ApplicationView() {
 
     return (
         <div>
-            View Application Details for application id: {applicationId}
-            <div>
-                {testData ? (
-                    <div>
-                        <h2>Test Data</h2>
-                        <pre>{JSON.stringify(testData, null, 2)}</pre>
-                    </div>
-                ) : (
-                    <p>Loading test data...</p>
-                )}
-            </div>
-            <div>
-                {applicationsData ? (
-                    <div>
-                        <h2>Applications Data</h2>
-                        <pre>{JSON.stringify(applicationsData, null, 2)}</pre>
-                    </div>
-                ) : (
-                    <p>Loading test data...</p>
-                )}
-            </div>
-            <div>
-                {applicationsData ? (
-                    <div>
-                        <h2>Type Keys</h2>
-                        <pre>{JSON.stringify(Object.keys(INTEREST_LEVEL_OPTIONS), null, 2)}</pre>
-                        <pre>{typeof [...Object.keys(INTEREST_LEVEL_OPTIONS)]}</pre>
-                        <pre>{typeof ['LOW', 'MEDIUM', 'HIGH']}</pre>
-                    </div>
-                ) : (
-                    <p>Loading test data...</p>
-                )}
-            </div>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Application Details for application id: {applicationId}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ApplicationForm />
+                </CardContent>
+            </Card>
         </div>
     )
 }
