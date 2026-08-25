@@ -1,13 +1,13 @@
 import { ApplicationForm } from "@/components/applicationForm"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getApplicationsData, testQuery } from "@/services/queries"
-import { useQuery } from "@tanstack/react-query"
+// import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
 function ApplicationView() {
-    const {data: applicationsData} = useQuery(getApplicationsData)
+    // const {data: applicationsData} = useQuery(getApplicationsData)
     const {applicationId} = Route.useParams()
-    const {data: testData} = useQuery(testQuery)
+    // const {data: testData} = useQuery(testQuery)
 
     return (
         <div>

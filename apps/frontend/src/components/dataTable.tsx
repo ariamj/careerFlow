@@ -39,7 +39,7 @@ import {
     DialogTrigger
 } from "./ui/dialog";
 import { ApplicationForm } from "./applicationForm";
-import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -85,10 +85,6 @@ export function DataTable<TData, TValue>({
             globalFilter
         },
     })
-
-    const createNewApplication = () => {
-        console.log("Create new application button clicked")
-    }
 
     return (
         <div>
