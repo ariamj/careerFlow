@@ -9,7 +9,7 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS } from "@/utils/types";
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application } from "@/utils/types";
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "./ui/date-picker";
 import { Button } from "./ui/button";
@@ -17,7 +17,13 @@ import { PlusIcon, XIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText, InputGroupTextarea } from "./ui/input-group";
 
-export function ApplicationForm() {
+interface ApplicationFormProps {
+    application?: Application
+}
+
+export function ApplicationForm({
+    application
+}: ApplicationFormProps) {
     const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([])
     // const [applyDate, setApplyDate] = React.useState<Date | undefined>(undefined)
     const [links, setLinks] = React.useState<Record<string, string>[]>([])
@@ -109,7 +115,7 @@ export function ApplicationForm() {
         <FieldGroup>
             <Field className="w-[50%] md:w-[25%]">
                 <FieldLabel htmlFor="interest-level">Interest Level</FieldLabel>
-                <Select items={interestLevelOptions} id="interest-level">
+                <Select items={interestLevelOptions} id="interest-level" defaultValue={application?.interest?.label}>
                     <SelectTrigger>
                         <SelectValue />
                     </SelectTrigger>
@@ -129,6 +135,7 @@ export function ApplicationForm() {
                 <Input
                     id="company-name"
                     placeholder="Enter company name"
+                    defaultValue={application?.company}
                     required
                 />
             </Field>
@@ -137,13 +144,14 @@ export function ApplicationForm() {
                 <Input
                     id="position-title"
                     placeholder="Enter position title"
+                    defaultValue={application?.position}
                     required
                 />
             </Field>
             <div className="flex flex-col gap-4 lg:flex-row md:space-x-4">
                 <Field>
                     <FieldLabel htmlFor="work-mode">Work Mode</FieldLabel>
-                    <Select items={workModeOptions} id="work-mode">
+                    <Select items={workModeOptions} id="work-mode" defaultValue={application?.workMode}>
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
@@ -164,13 +172,13 @@ export function ApplicationForm() {
                         id="app-status"
                         options={statusOptions}
                         onValueChange={setSelectedStatuses}
-                        defaultValue={selectedStatuses}
+                        defaultValue={application?.status.map((status) => status.label) || selectedStatuses}
                         variant="default"
                     />
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="applied-date">Applied Date</FieldLabel>
-                    <DatePickerInput />
+                    <DatePickerInput defaultValue={application?.applyDate} />
                 </Field>
             </div>
             <FieldGroup>

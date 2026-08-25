@@ -1,12 +1,12 @@
 import { ApplicationForm } from "@/components/applicationForm"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getApplicationsData, testQuery } from "@/services/queries"
-// import { useQuery } from "@tanstack/react-query"
+import { getApplicationById, testQuery } from "@/services/queries"
+import { useQuery } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 
 function ApplicationView() {
-    // const {data: applicationsData} = useQuery(getApplicationsData)
     const {applicationId} = Route.useParams()
+    const {data: application} = useQuery(getApplicationById(applicationId))
     // const {data: testData} = useQuery(testQuery)
 
     return (
@@ -16,7 +16,7 @@ function ApplicationView() {
                     <CardTitle>Application Details for application id: {applicationId}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ApplicationForm />
+                    <ApplicationForm application={application} />
                 </CardContent>
             </Card>
         </div>
@@ -30,14 +30,7 @@ export const Route = createFileRoute('/Applications/$applicationId')({
         await queryClient.ensureQueryData(testQuery)
 
         return queryClient
-            .ensureQueryData(getApplicationsData)
-            .then((applications) => {
-                const application = applications.find((app) => app.id === applicationId)
-                if (!application) {
-                    throw new Error(`Application with ID ${applicationId} not found`)
-                }
-                return application
-            })
+            .ensureQueryData(getApplicationById(applicationId))
             .catch((err) => {
                 console.error("The loader for the Application view route failed to fetch data:", err)
                 // throw err; // Re-throw the error to propagate it to the route's error boundary

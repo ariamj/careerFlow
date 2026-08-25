@@ -19,6 +19,7 @@ import {
 interface DatePickerProps {
     placeholder?: string | undefined,
     render?: React.ReactNode | undefined
+    defaultValue?: Date | undefined
 }
 
 function formatDate(date: Date | undefined) {
@@ -49,6 +50,14 @@ export function DatePickerInput({
   const [month, setMonth] = React.useState<Date | undefined>(date)
   const [value, setValue] = React.useState(formatDate(date))
 
+  React.useEffect(() => {
+    if (props.defaultValue) {
+      setDate(props.defaultValue)
+      setMonth(props.defaultValue)
+      setValue(formatDate(props.defaultValue))
+    }
+  }, [props.defaultValue])
+
   return (
     <InputGroup>
         <InputGroupInput
@@ -56,12 +65,12 @@ export function DatePickerInput({
             value={value}
             placeholder={placeholder}
             onChange={(e) => {
-            const date = new Date(e.target.value)
-            setValue(e.target.value)
-            if (isValidDate(date)) {
-                setDate(date)
-                setMonth(date)
-            }
+              const date = new Date(e.target.value)
+              setValue(e.target.value)
+              if (isValidDate(date)) {
+                  setDate(date)
+                  setMonth(date)
+              }
             }}
             onKeyDown={(e) => {
             if (e.key === "ArrowDown") {

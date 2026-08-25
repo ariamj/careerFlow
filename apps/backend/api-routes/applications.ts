@@ -1,5 +1,6 @@
 
 import { applications } from '@career-flow/database/schema/applications.js';
+import { eq } from 'drizzle-orm';
 import { Hono } from 'hono';
 
 const applicationsApp = new Hono<{ Variables: { db: any } }>()
@@ -15,6 +16,21 @@ applicationsApp.get('/applications', async (c) => {
     }
 });
 
+applicationsApp.get('/applications/:id', async (c) => {
+    try {
+        const db = c.get('db');
+        const applicationId = c.req.param('id');
+        const application = await db.select().from(applications).where(eq(applications.id, applicationId));
+        if (!application) {
+            return c.json({ error: `Application with id ${applicationId} not found` }, 404);
+        }
+        return c.json(application[0]);
+    } catch (error) {
+        return c.json({ error: 'Failed to retrieve application' }, 500);
+    }
+});
+
+// POST a new application to the database
 applicationsApp.post('/applications', async (c) => {
     try {
         const body = await c.req.json();
