@@ -57,8 +57,9 @@ export function DataTable<TData, TValue>({
     header = true,
     searchBar = true,
     pagination = true,
-    buttons = false
+    buttons = false,
 }: DataTableProps<TData, TValue>) {
+    const [open, setOpen] = React.useState(false)
     const queryClient = useQueryClient();
     const [pageSize, setPageSize] = React.useState<PaginationState>({
         pageIndex: 0,
@@ -107,7 +108,7 @@ export function DataTable<TData, TValue>({
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["applications"] })
-            // onOpenChange(false)
+            setOpen(false)
         },
         onError: (error) => {
             console.error("Mutation error:", error);
@@ -116,15 +117,9 @@ export function DataTable<TData, TValue>({
 
     const handleFormSubmit = (formData: Record<string, unknown>) => {
         setIsSubmitting(true)
-        // Handle form submission logic here
-        console.log("Form submitted")
-        console.log(formData);
 
         try {
             createApplication.mutate(formData);
-
-            // onOpenChange(false);
-            // onSuccess?.();
         } catch (error) {
             console.error("Submission error:", error);
         } finally {
@@ -169,7 +164,7 @@ export function DataTable<TData, TValue>({
                 )}
                 {buttons && (
                     <div className="ml-auto py-4">
-                        <Dialog>
+                        <Dialog open={open} onOpenChange={setOpen}>
                             <form>
                                 <DialogTrigger
                                     render={<Button variant="default" className="cursor-pointer"><PlusIcon /></Button>}
@@ -190,9 +185,10 @@ export function DataTable<TData, TValue>({
                                             type="submit"
                                             form={FORM_ID}
                                             disabled={isSubmitting}
-                                            // onClick={handleFormSubmit}
                                             className="cursor-pointer"
-                                        >Create</Button>
+                                        >
+                                            {createApplication.isPending ? "Saving..." : "Create"}
+                                        </Button>
                                     </DialogFooter>
                                 </DialogContent>
                             </form>
