@@ -19,20 +19,22 @@ import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText, InputGrou
 
 interface ApplicationFormProps {
     application?: Application
+    formId?: string
+    onSubmit?: (data: any) => void
 }
 
 export function ApplicationForm({
-    application
+    application,
+    formId,
+    onSubmit
 }: ApplicationFormProps) {
     const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([])
-    // const [applyDate, setApplyDate] = React.useState<Date | undefined>(undefined)
     const [links, setLinks] = React.useState<Record<string, string>[]>([])
-    // const [resumeFile, setResumeFile] = React.useState<File | null>(null)
-    // const [coverLetterFile, setCoverLetterFile] = React.useState<File | null>(null)
     const [files, setFiles] = React.useState<Record<string, string>[]>([])
     const [postings, setPostings] = React.useState<Record<string, string>[]>([])
     const [responseRecordStyle, setResponseRecordStyle] = React.useState<string>("qa")
     const [responseQuestions, setResponseQuestions] = React.useState<Record<string, string>[]>([])
+    const [formData, setFormData] = React.useState({})
 
     const interestLevelOptions = [
         {
@@ -111,11 +113,31 @@ export function ApplicationForm({
         }
     ]
 
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (onSubmit) {
+            onSubmit({
+                ...formData,
+                status: selectedStatuses,
+                links: links,
+                files: files,
+                postings: postings,
+                responseQuestions: responseQuestions,
+            });
+        }
+    }
+
     return (
+        <form id={formId} onSubmit={handleSubmit}>
         <FieldGroup>
             <Field className="w-[50%] md:w-[25%]">
                 <FieldLabel htmlFor="interest-level">Interest Level</FieldLabel>
-                <Select items={interestLevelOptions} id="interest-level" defaultValue={application?.interest?.label}>
+                <Select
+                    items={interestLevelOptions}
+                    id="interest-level"
+                    defaultValue={application?.interest?.label}
+                    onValueChange={(value) => setFormData({ ...formData, interest: value })}
+                >
                     <SelectTrigger>
                         <SelectValue />
                     </SelectTrigger>
@@ -131,27 +153,34 @@ export function ApplicationForm({
                 </Select>
             </Field>
             <Field>
-                <FieldLabel htmlFor="company-name">Company Name</FieldLabel>
+                <FieldLabel htmlFor="company-name">Company Name*</FieldLabel>
                 <Input
                     id="company-name"
                     placeholder="Enter company name"
                     defaultValue={application?.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                     required
                 />
             </Field>
             <Field>
-                <FieldLabel htmlFor="position-title">Position Title</FieldLabel>
+                <FieldLabel htmlFor="position-title">Position Title*</FieldLabel>
                 <Input
                     id="position-title"
                     placeholder="Enter position title"
                     defaultValue={application?.position}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
                     required
                 />
             </Field>
             <div className="flex flex-col gap-4 lg:flex-row md:space-x-4">
                 <Field>
                     <FieldLabel htmlFor="work-mode">Work Mode</FieldLabel>
-                    <Select items={workModeOptions} id="work-mode" defaultValue={application?.workMode}>
+                    <Select
+                        items={workModeOptions}
+                        id="work-mode"
+                        defaultValue={application?.workMode}
+                        onValueChange={(value) => setFormData({ ...formData, workMode: value })}
+                    >
                         <SelectTrigger>
                             <SelectValue />
                         </SelectTrigger>
@@ -178,7 +207,7 @@ export function ApplicationForm({
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="applied-date">Applied Date</FieldLabel>
-                    <DatePickerInput defaultValue={application?.applyDate} />
+                    <DatePickerInput defaultValue={application?.applyDate} onValueChange={(value) => setFormData({ ...formData, applyDate: value })} />
                 </Field>
             </div>
             <FieldGroup>
@@ -388,5 +417,6 @@ export function ApplicationForm({
                 )}
             </Field>
         </FieldGroup>
+        </form>
     )
 }

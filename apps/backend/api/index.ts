@@ -16,10 +16,20 @@ type Env = {
 const app = new Hono<Env>().basePath('/api/');
 
 app.use('*', cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin) => {
+        if (origin?.startsWith('http://localhost:')) {
+            return origin;
+        }
+        return process.env.FRONTEND_URL || 'http://localhost:5173';
+    },
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
 }));
+
+app.options("*", (c) => {
+    return c.body(null, 204);
+});
 
 let db: NeonHttpDatabase;
 
@@ -46,5 +56,10 @@ app.route('/', applicationsApp);
 app.route('/', testApp);
 
 export const runtime = 'edge';
-export const GET = handle(app);
-// export default handle(app);
+const handler = handle(app);
+
+export const GET = handler;
+export const POST = handler;
+export const PUT = handler;
+export const DELETE = handler;
+export const OPTIONS = handler;

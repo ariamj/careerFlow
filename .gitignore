@@ -19,6 +19,7 @@ dist-ssr
 .idea
 .DS_Store
 .tanstack/
+.turbo/
 *.suo
 *.ntvs*
 *.njsproj

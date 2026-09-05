@@ -20,6 +20,7 @@ interface DatePickerProps {
     placeholder?: string | undefined,
     render?: React.ReactNode | undefined
     defaultValue?: Date | undefined
+    onValueChange?: (value: string) => void
 }
 
 function formatDate(date: Date | undefined) {
@@ -43,6 +44,7 @@ function isValidDate(date: Date | undefined) {
 
 export function DatePickerInput({
     placeholder = "Select a date",
+    onValueChange,
     ...props
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false)
@@ -67,6 +69,7 @@ export function DatePickerInput({
             onChange={(e) => {
               const date = new Date(e.target.value)
               setValue(e.target.value)
+              onValueChange?.(e.target.value)
               if (isValidDate(date)) {
                   setDate(date)
                   setMonth(date)
@@ -97,6 +100,7 @@ export function DatePickerInput({
                         onSelect={(date) => {
                             setDate(date)
                             setValue(formatDate(date))
+                            onValueChange?.(formatDate(date))
                             setOpen(false)
                         }}
                     />

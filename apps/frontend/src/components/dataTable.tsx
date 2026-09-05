@@ -40,6 +40,7 @@ import {
 } from "./ui/dialog";
 import { ApplicationForm } from "./applicationForm";
 import { ScrollArea } from "./ui/scroll-area";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -58,6 +59,7 @@ export function DataTable<TData, TValue>({
     pagination = true,
     buttons = false
 }: DataTableProps<TData, TValue>) {
+    const queryClient = useQueryClient();
     const [pageSize, setPageSize] = React.useState<PaginationState>({
         pageIndex: 0,
         pageSize: 20,
@@ -65,6 +67,8 @@ export function DataTable<TData, TValue>({
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [rowSelection, setRowSelection] = React.useState({})
     const [globalFilter, setGlobalFilter] = React.useState<any>([])
+    const FORM_ID = "new-application-form"
+    const [isSubmitting, setIsSubmitting] = React.useState(false)
 
     const table = useReactTable({
         data: data ?? [],
@@ -85,6 +89,48 @@ export function DataTable<TData, TValue>({
             globalFilter
         },
     })
+
+    const createApplication = useMutation({
+        mutationFn: async (formData: any) => {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData),
+            })
+            if (!response.ok) {
+                throw new Error('Network response was not ok')
+            }
+            return response.json()
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["applications"] })
+            // onOpenChange(false)
+        },
+        onError: (error) => {
+            console.error("Mutation error:", error);
+        }
+    })
+
+    const handleFormSubmit = (formData: Record<string, unknown>) => {
+        setIsSubmitting(true)
+        // Handle form submission logic here
+        console.log("Form submitted")
+        console.log(formData);
+
+        try {
+            createApplication.mutate(formData);
+
+            // onOpenChange(false);
+            // onSuccess?.();
+        } catch (error) {
+            console.error("Submission error:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    }
 
     return (
         <div>
@@ -134,13 +180,19 @@ export function DataTable<TData, TValue>({
                                             <DialogTitle>New Application</DialogTitle>
                                             <DialogDescription>Track a new application. Click create when done.</DialogDescription>
                                         </DialogHeader>
-                                        <ApplicationForm />
+                                        <ApplicationForm formId={FORM_ID} onSubmit={handleFormSubmit} />
                                     </ScrollArea>
                                     <DialogFooter>
                                         <DialogClose
                                             render={<Button className="cursor-pointer">Cancel</Button>}
                                         />
-                                        <Button type="submit" className="cursor-pointer">Create</Button>
+                                        <Button
+                                            type="submit"
+                                            form={FORM_ID}
+                                            disabled={isSubmitting}
+                                            // onClick={handleFormSubmit}
+                                            className="cursor-pointer"
+                                        >Create</Button>
                                     </DialogFooter>
                                 </DialogContent>
                             </form>
