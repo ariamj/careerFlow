@@ -15,7 +15,7 @@ export const applications = pgTable('applications', {
     position: text('position').notNull(),
     workMode: workModeEnum('work_mode'),
     applyDate: timestamp('apply_date'),
-    status: statusEnum('status').array().notNull(),
+    status: statusEnum('status').array(),
     userId: uuid('user_id').notNull().references(() => users.id),
     createdAt: timestamp('created_at').defaultNow().notNull(),
 })

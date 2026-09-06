@@ -32,6 +32,25 @@ export const getApplicationsData = queryOptions({
     staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
 })
 
+export const getApplicationById = (id: string) => queryOptions({
+    queryKey: ['application', id],
+    queryFn: async (): Promise<Application> => {
+        const response = await fetch(`${base_url}/api/applications/${id}`)
+        if (!response.ok) {
+            throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        return {
+            ...data,
+            interest: INTEREST_LEVEL_OPTIONS[data.interest as keyof typeof INTEREST_LEVEL_OPTIONS] as InterestLevel | undefined,
+            workMode: WORK_MODE_OPTIONS[data.workMode as keyof typeof WORK_MODE_OPTIONS] as WorkMode | undefined,
+            applyDate: new Date(data.applyDate),
+            status: data.status.map((status: string) => STATUS_OPTIONS[status as keyof typeof STATUS_OPTIONS] as Status)
+        }
+    },
+    staleTime: 1000 * 60 * 5, // Data stays fresh for 5 minutes
+})
+
 export const testQuery = queryOptions({
     queryKey: ['test'],
     queryFn: async () => {

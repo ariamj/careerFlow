@@ -58,6 +58,7 @@ function ApplicationsPage() {
                 <DataTable
                     columns={applicationColumns}
                     data={applicationsData? applicationsData : []}
+                    buttons={true}
                 />
             </Card>
         </div>
