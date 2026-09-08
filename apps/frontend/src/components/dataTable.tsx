@@ -184,7 +184,7 @@ export function DataTable<TData, TValue>({
                                         <Button
                                             type="submit"
                                             form={FORM_ID}
-                                            disabled={isSubmitting}
+                                            disabled={isSubmitting || createApplication.isPending}
                                             className="cursor-pointer"
                                         >
                                             {createApplication.isPending ? "Saving..." : "Create"}
