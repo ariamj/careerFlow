@@ -15,6 +15,7 @@ import { Checkbox } from './ui/checkbox'
 import { type Application, type InterestLevel, type Status, type WorkMode } from '@/utils/types'
 import { Badge } from '@/components/ui/badge'
 import { useNavigate } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 export const applicationColumns: ColumnDef<Application>[] = [
     {
@@ -174,6 +175,35 @@ export const applicationColumns: ColumnDef<Application>[] = [
         cell: ({row}) => {
             const application = row.original
             const navigate = useNavigate({ from: '/Applications/' })
+            const queryClient = useQueryClient();
+
+            const deleteApplication = useMutation({
+                mutationFn: async (applicationId: string) => {
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/applications/${applicationId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: 'include',
+                    })
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok. Failed to delete application.')
+                    }
+                    return response.json()
+                },
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ["applications"] })
+                },
+                onError: (error) => {
+                    console.error("Mutation error - Error deleting application:", error)
+                }
+            });
+
+            const handleDeleteApplication = (applicationId: string) => {
+                if (confirm("Are you sure you want to delete this application?")) {
+                    deleteApplication.mutate(applicationId);
+                }
+            }
 
             return (
                 <div className="flex justify-end space-x-1">
@@ -198,12 +228,14 @@ export const applicationColumns: ColumnDef<Application>[] = [
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem
-                                onClick={() => console.log("Edit application", application.id)}
+                                onClick={() => {
+                                    navigate({ to: `/Applications/${application.id}` })
+                                }}
                             >
                                 Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => console.log("Delete application", application.id)}
+                                onClick={() => handleDeleteApplication(application.id)}
                                 className="text-destructive"
                             >
                                 Delete
