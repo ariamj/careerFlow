@@ -1,4 +1,4 @@
-import { Controller, type Control, type FieldValues, type Path, type RegisterOptions } from 'react-hook-form';
+import { Controller, type Control, type ControllerRenderProps, type FieldValues, type Path, type RegisterOptions } from 'react-hook-form';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface FormSelectProps<T extends FieldValues> {
@@ -8,7 +8,7 @@ interface FormSelectProps<T extends FieldValues> {
     options: { label: string; value: string | null }[];
     rules?: RegisterOptions<T, Path<T>>;
     disabled?: boolean;
-    defaultValue?: never[] | null | undefined;
+    defaultValue?: null | undefined;
     alignItemWithTrigger?: boolean;
 }
 
@@ -27,7 +27,7 @@ export function FormSelect<T extends FieldValues>({
             name={name}
             control={control}
             rules={rules}
-            render={({ field}) => (
+            render={({ field }: { field: ControllerRenderProps<T, Path<T>>}) => (
                 <Select
                     value={field.value}
                     onValueChange={field.onChange}

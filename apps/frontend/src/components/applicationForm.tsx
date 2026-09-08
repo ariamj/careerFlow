@@ -9,14 +9,14 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application } from "@/utils/types";
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application, type Status } from "@/utils/types";
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "./ui/date-picker";
 import { Button } from "./ui/button";
 import { PlusIcon, XIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText, InputGroupTextarea } from "./ui/input-group";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, type ControllerRenderProps } from "react-hook-form";
 import { FormSelect } from "./formSelect";
 
 interface ApplicationFormProps {
@@ -35,10 +35,8 @@ export function ApplicationForm({
     const [postings, setPostings] = React.useState<Record<string, string>[]>([])
     const [responseRecordStyle, setResponseRecordStyle] = React.useState<string>("qa")
     const [responseQuestions, setResponseQuestions] = React.useState<Record<string, string>[]>([])
-    const [formData, setFormData] = React.useState({})
 
     const {
-        register,
         handleSubmit,
         reset,
         control,
@@ -165,7 +163,7 @@ export function ApplicationForm({
                 <Controller
                     name="company"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field }: { field: ControllerRenderProps<Application, "company">}) => (
                         <Input
                             id="company-name"
                             placeholder="Enter company name"
@@ -180,7 +178,7 @@ export function ApplicationForm({
                 <Controller
                     name="position"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field }: { field: ControllerRenderProps<Application, "position">}) => (
                         <Input
                             id="position-title"
                             placeholder="Enter position title"
@@ -205,8 +203,8 @@ export function ApplicationForm({
                     <Controller
                         name="status"
                         control={control}
-                        render={({ field }) => {
-                                const selectedValues = (field.value ?? []).map((status) =>
+                        render={({ field }: { field: ControllerRenderProps<Application, "status">}) => {
+                                const selectedValues = (field.value ?? []).map((status: Status) =>
                                     typeof status === "string" ? status : status.value
                                 );
 
@@ -229,7 +227,7 @@ export function ApplicationForm({
                     <Controller
                         name="applyDate"
                         control={control}
-                        render={({ field }) => (
+                        render={({ field }: { field: ControllerRenderProps<Application, "applyDate">}) => (
                             <DatePickerInput
                                 defaultValue={field.value ? new Date(field.value) : undefined}
                                 onValueChange={(value) => {
