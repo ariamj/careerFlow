@@ -18,6 +18,7 @@ export const applications = pgTable('applications', {
     status: statusEnum('status').array(),
     userId: uuid('user_id').notNull().references(() => users.id),
     createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
 })
 
 export type Application = typeof applications.$inferSelect;

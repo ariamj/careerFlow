@@ -9,18 +9,20 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { MultiSelect } from "@/components/ui/multi-select";
-import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application } from "@/utils/types";
+import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS, WORK_MODE_OPTIONS, type Application, type Status } from "@/utils/types";
 import { Input } from "@/components/ui/input";
 import { DatePickerInput } from "./ui/date-picker";
 import { Button } from "./ui/button";
 import { PlusIcon, XIcon } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText, InputGroupTextarea } from "./ui/input-group";
+import { Controller, useForm, type ControllerRenderProps } from "react-hook-form";
+import { FormSelect } from "./formSelect";
 
 interface ApplicationFormProps {
     application?: Application
     formId?: string
-    onSubmit?: (data: any) => void
+    onSubmit?: (data: any, dirtyFields: Record<string, boolean | undefined>) => void
 }
 
 export function ApplicationForm({
@@ -28,13 +30,28 @@ export function ApplicationForm({
     formId,
     onSubmit
 }: ApplicationFormProps) {
-    const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([])
     const [links, setLinks] = React.useState<Record<string, string>[]>([])
     const [files, setFiles] = React.useState<Record<string, string>[]>([])
     const [postings, setPostings] = React.useState<Record<string, string>[]>([])
     const [responseRecordStyle, setResponseRecordStyle] = React.useState<string>("qa")
     const [responseQuestions, setResponseQuestions] = React.useState<Record<string, string>[]>([])
-    const [formData, setFormData] = React.useState({})
+
+    const {
+        handleSubmit,
+        reset,
+        control,
+        formState: { dirtyFields },
+    } = useForm<Application>({
+        // resolver: zodResolver(applicationSchema),
+        defaultValues: {
+            ...application,
+            status: application?.status ?? [],
+        }
+    });
+
+    React.useEffect(() => {
+        if (application) reset(application);
+    }, [application, reset]);
 
     const interestLevelOptions = [
         {
@@ -113,101 +130,113 @@ export function ApplicationForm({
         }
     ]
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleFormSubmit = (formData: any) => {
+        // e.preventDefault();
         if (onSubmit) {
-            onSubmit({
+            onSubmit(
+                {
                 ...formData,
-                status: selectedStatuses,
                 links: links,
                 files: files,
                 postings: postings,
                 responseQuestions: responseQuestions,
-            });
+                },
+                dirtyFields as Record<string, boolean | undefined>
+            );
         }
     }
 
     return (
-        <form id={formId} onSubmit={handleSubmit}>
+        <form id={formId} onSubmit={handleSubmit(handleFormSubmit)}>
         <FieldGroup>
             <Field className="w-[50%] md:w-[25%]">
                 <FieldLabel htmlFor="interest-level">Interest Level</FieldLabel>
-                <Select
-                    items={interestLevelOptions}
+                <FormSelect<Application>
                     id="interest-level"
-                    defaultValue={application?.interest?.label}
-                    onValueChange={(value) => setFormData({ ...formData, interest: value })}
-                >
-                    <SelectTrigger>
-                        <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent alignItemWithTrigger={false}>
-                        <SelectGroup>
-                            {interestLevelOptions.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                    {option.label}
-                                </SelectItem>
-                            ))}
-                        </SelectGroup>
-                    </SelectContent>
-                </Select>
+                    name="interest"
+                    control={control}
+                    options={interestLevelOptions}
+                />
             </Field>
             <Field>
                 <FieldLabel htmlFor="company-name">Company Name*</FieldLabel>
-                <Input
-                    id="company-name"
-                    placeholder="Enter company name"
-                    defaultValue={application?.company}
-                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                    required
+                <Controller
+                    name="company"
+                    control={control}
+                    render={({ field }: { field: ControllerRenderProps<Application, "company">}) => (
+                        <Input
+                            id="company-name"
+                            placeholder="Enter company name"
+                            {...field}
+                            required
+                        />
+                    )}
                 />
             </Field>
             <Field>
                 <FieldLabel htmlFor="position-title">Position Title*</FieldLabel>
-                <Input
-                    id="position-title"
-                    placeholder="Enter position title"
-                    defaultValue={application?.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    required
+                <Controller
+                    name="position"
+                    control={control}
+                    render={({ field }: { field: ControllerRenderProps<Application, "position">}) => (
+                        <Input
+                            id="position-title"
+                            placeholder="Enter position title"
+                            {...field}
+                            required
+                        />
+                    )}
                 />
             </Field>
             <div className="flex flex-col gap-4 lg:flex-row md:space-x-4">
                 <Field>
                     <FieldLabel htmlFor="work-mode">Work Mode</FieldLabel>
-                    <Select
-                        items={workModeOptions}
+                    <FormSelect<Application>
                         id="work-mode"
-                        defaultValue={application?.workMode}
-                        onValueChange={(value) => setFormData({ ...formData, workMode: value })}
-                    >
-                        <SelectTrigger>
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent alignItemWithTrigger={false}>
-                            <SelectGroup>
-                                {workModeOptions.map((option) => (
-                                    <SelectItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+                        name="workMode"
+                        control={control}
+                        options={workModeOptions}
+                    />
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="app-status">Status</FieldLabel>
-                    <MultiSelect
-                        id="app-status"
-                        options={statusOptions}
-                        onValueChange={setSelectedStatuses}
-                        defaultValue={application?.status.map((status) => status.label) || selectedStatuses}
-                        variant="default"
+                    <Controller
+                        name="status"
+                        control={control}
+                        render={({ field }: { field: ControllerRenderProps<Application, "status">}) => {
+                                const selectedValues = (field.value ?? []).map((status: Status) =>
+                                    typeof status === "string" ? status : status.value
+                                );
+
+                                return (
+                                    <MultiSelect
+                                        id="app-status"
+                                        variant="default"
+                                        options={statusOptions}
+                                        onBlur={field.onBlur}
+                                        value={selectedValues}
+                                        onValueChange={field.onChange}
+                                    />
+                                );
+                            }
+                        }
                     />
                 </Field>
                 <Field>
                     <FieldLabel htmlFor="applied-date">Applied Date</FieldLabel>
-                    <DatePickerInput defaultValue={application?.applyDate} onValueChange={(value) => setFormData({ ...formData, applyDate: value })} />
+                    <Controller
+                        name="applyDate"
+                        control={control}
+                        render={({ field }: { field: ControllerRenderProps<Application, "applyDate">}) => (
+                            <DatePickerInput
+                                defaultValue={field.value ? new Date(field.value) : undefined}
+                                onValueChange={(value) => {
+                                    const date = value ? new Date(value) : undefined;
+                                    field.onChange(date);
+                                }}
+                            />
+                        )}
+                    />
                 </Field>
             </div>
             <FieldGroup>
@@ -264,7 +293,7 @@ export function ApplicationForm({
                     />
                 </Field>
                 {files.map((file) => (
-                    <Field orientation="horizontal">
+                    <Field orientation="horizontal" key={file.id}>
                         <Input
                             id="app-files"
                             aria-label="Attach application file"
