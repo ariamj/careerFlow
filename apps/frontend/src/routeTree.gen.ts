@@ -15,6 +15,7 @@ import { Route as MyProfileRouteImport } from './pages/MyProfile'
 import { Route as PostingArchiveRouteImport } from './pages/PostingArchive'
 import { Route as ApplicationsIndexRouteImport } from './pages/Applications.index'
 import { Route as ApplicationsApplicationIdRouteImport } from './pages/Applications.$applicationId'
+import { Route as AuthPathnameRouteImport } from './pages/auth.$pathname'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,6 +48,11 @@ const ApplicationsApplicationIdRoute =
     path: '/Applications/$applicationId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthPathnameRoute = AuthPathnameRouteImport.update({
+  id: '/auth/$pathname',
+  path: '/auth/$pathname',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesById {
@@ -71,6 +79,7 @@ export interface FileRoutesById {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -81,6 +90,7 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/auth/$pathname'
     | '/Applications/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -89,6 +99,7 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/auth/$pathname'
     | '/Applications'
   id:
     | '__root__'
@@ -97,6 +108,7 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/auth/$pathname'
     | '/Applications/'
   fileRoutesById: FileRoutesById
 }
@@ -106,6 +118,7 @@ export interface RootRouteChildren {
   MyProfileRoute: typeof MyProfileRoute
   PostingArchiveRoute: typeof PostingArchiveRoute
   ApplicationsApplicationIdRoute: typeof ApplicationsApplicationIdRoute
+  AuthPathnameRoute: typeof AuthPathnameRoute
   ApplicationsIndexRoute: typeof ApplicationsIndexRoute
 }
 
@@ -153,6 +166,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApplicationsApplicationIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/$pathname': {
+      id: '/auth/$pathname'
+      path: '/auth/$pathname'
+      fullPath: '/auth/$pathname'
+      preLoaderRoute: typeof AuthPathnameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   MyProfileRoute: MyProfileRoute,
   PostingArchiveRoute: PostingArchiveRoute,
   ApplicationsApplicationIdRoute: ApplicationsApplicationIdRoute,
+  AuthPathnameRoute: AuthPathnameRoute,
   ApplicationsIndexRoute: ApplicationsIndexRoute,
 }
 export const routeTree = rootRouteImport
