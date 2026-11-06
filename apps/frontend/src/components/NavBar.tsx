@@ -1,14 +1,31 @@
+import { authClient } from "@/lib/auth";
 import { 
     PopoverGroup,
     Dialog,
     DialogPanel
 } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { UserButton } from "@neondatabase/auth-ui";
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { BriefcaseBusiness } from "lucide-react";
+import { useEffect, useState } from "react";
+
+type AuthSession = NonNullable<
+    Awaited<ReturnType<typeof authClient.getSession>>["data"]["session"]
+>;
 
 export default function NavBar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    // const { data, error } = await authClient.getSession();
+    const [session, setSession] = useState<AuthSession | null>(null);
+
+    useEffect(() => {
+        authClient.getSession().then((result) => {
+            if (result.data?.session && result.data?.user) {
+                setSession(result.data.session);
+            }
+        })
+    }, [])
     
     const tabs = [
         {
@@ -35,16 +52,8 @@ export default function NavBar() {
                 <div className="flex lg:flex-1">
                     <Link to="/Dashboard" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <img
-                            alt=""
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                            className="h-8 w-auto dark:hidden"
-                        />
-                        <img
-                            alt=""
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                            className="h-8 w-auto not-dark:hidden"
-                        />
+                        <BriefcaseBusiness size={48} className = "h-8 w-auto dark:hidden" />
+                        <BriefcaseBusiness size={48} color="#f5f5f5" className = "h-8 w-auto not-dark:hidden" />
                     </Link>
                 </div>
                 <div className="flex lg:hidden">
@@ -77,9 +86,13 @@ export default function NavBar() {
                     })}
                 </PopoverGroup>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a href="#" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
-                        Log in <span aria-hidden="true">&rarr;</span>
-                    </a>
+                    {session ? (
+                        <UserButton className="text-sm/6 font-semibold text-gray-900 bg-white hover:bg-gray-100 dark:text-white dark:bg-black dark:hover:bg-gray-800" />
+                    ) : (
+                        <a href="#" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
+                            Log in <span aria-hidden="true">&rarr;</span>
+                        </a>
+                    )}
                 </div>
             </nav>
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">

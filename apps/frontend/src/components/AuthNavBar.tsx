@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { BriefcaseBusiness } from "lucide-react";
 
 export default function AuthNavBar() {
     return (
@@ -7,16 +8,8 @@ export default function AuthNavBar() {
                 <div className="flex lg:flex-1">
                     <Link to="/Dashboard" className="-m-1.5 p-1.5">
                         <span className="sr-only">Your Company</span>
-                        <img
-                            alt=""
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                            className="h-8 w-auto dark:hidden"
-                        />
-                        <img
-                            alt=""
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                            className="h-8 w-auto not-dark:hidden"
-                        />
+                        <BriefcaseBusiness size={48} className = "h-8 w-auto dark:hidden" />
+                        <BriefcaseBusiness size={48} color="#f5f5f5" className = "h-8 w-auto not-dark:hidden" />
                     </Link>
                 </div>
             </nav>

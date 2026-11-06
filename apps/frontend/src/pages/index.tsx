@@ -32,8 +32,8 @@ function Home() {
 }
 
 export const Route = createFileRoute('/')({
-    // beforeLoad: () => {
-    //     throw redirect({ to: '/Dashboard' })
-    // },
+    beforeLoad: () => {
+        throw redirect({ to: '/Dashboard' })
+    },
     component: Home,
 })
