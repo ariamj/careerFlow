@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { getApplicationsData } from '@/services/queries';
 import { INTEREST_LEVEL_OPTIONS, STATUS_OPTIONS } from '@/utils/types';
+import { RedirectToSignIn, SignedIn, SignedOut } from '@neondatabase/auth-ui';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 import { useMemo } from 'react';
@@ -53,6 +54,7 @@ function DashboardPage() {
 
     return (
         <div>
+            <SignedIn>
             <div ref={containerRef}>
                 {mounted && (
                     <Responsive
@@ -138,6 +140,10 @@ function DashboardPage() {
                     </Responsive>
                 )}
             </div>
+            </SignedIn>
+            <SignedOut>
+                <RedirectToSignIn />
+            </SignedOut>
         </div>
     )
 }

@@ -15,6 +15,8 @@ import { Route as MyProfileRouteImport } from './pages/MyProfile'
 import { Route as PostingArchiveRouteImport } from './pages/PostingArchive'
 import { Route as ApplicationsIndexRouteImport } from './pages/Applications.index'
 import { Route as ApplicationsApplicationIdRouteImport } from './pages/Applications.$applicationId'
+import { Route as AccountPathnameRouteImport } from './pages/account.$pathname'
+import { Route as AuthPathnameRouteImport } from './pages/auth.$pathname'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -47,6 +49,16 @@ const ApplicationsApplicationIdRoute =
     path: '/Applications/$applicationId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AccountPathnameRoute = AccountPathnameRouteImport.update({
+  id: '/account/$pathname',
+  path: '/account/$pathname',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthPathnameRoute = AuthPathnameRouteImport.update({
+  id: '/auth/$pathname',
+  path: '/auth/$pathname',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/account/$pathname': typeof AccountPathnameRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -62,6 +76,8 @@ export interface FileRoutesByTo {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/account/$pathname': typeof AccountPathnameRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications': typeof ApplicationsIndexRoute
 }
 export interface FileRoutesById {
@@ -71,6 +87,8 @@ export interface FileRoutesById {
   '/MyProfile': typeof MyProfileRoute
   '/PostingArchive': typeof PostingArchiveRoute
   '/Applications/$applicationId': typeof ApplicationsApplicationIdRoute
+  '/account/$pathname': typeof AccountPathnameRoute
+  '/auth/$pathname': typeof AuthPathnameRoute
   '/Applications/': typeof ApplicationsIndexRoute
 }
 export interface FileRouteTypes {
@@ -81,6 +99,8 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/account/$pathname'
+    | '/auth/$pathname'
     | '/Applications/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -89,6 +109,8 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/account/$pathname'
+    | '/auth/$pathname'
     | '/Applications'
   id:
     | '__root__'
@@ -97,6 +119,8 @@ export interface FileRouteTypes {
     | '/MyProfile'
     | '/PostingArchive'
     | '/Applications/$applicationId'
+    | '/account/$pathname'
+    | '/auth/$pathname'
     | '/Applications/'
   fileRoutesById: FileRoutesById
 }
@@ -106,6 +130,8 @@ export interface RootRouteChildren {
   MyProfileRoute: typeof MyProfileRoute
   PostingArchiveRoute: typeof PostingArchiveRoute
   ApplicationsApplicationIdRoute: typeof ApplicationsApplicationIdRoute
+  AccountPathnameRoute: typeof AccountPathnameRoute
+  AuthPathnameRoute: typeof AuthPathnameRoute
   ApplicationsIndexRoute: typeof ApplicationsIndexRoute
 }
 
@@ -153,6 +179,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApplicationsApplicationIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/$pathname': {
+      id: '/account/$pathname'
+      path: '/account/$pathname'
+      fullPath: '/account/$pathname'
+      preLoaderRoute: typeof AccountPathnameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/$pathname': {
+      id: '/auth/$pathname'
+      path: '/auth/$pathname'
+      fullPath: '/auth/$pathname'
+      preLoaderRoute: typeof AuthPathnameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -162,6 +202,8 @@ const rootRouteChildren: RootRouteChildren = {
   MyProfileRoute: MyProfileRoute,
   PostingArchiveRoute: PostingArchiveRoute,
   ApplicationsApplicationIdRoute: ApplicationsApplicationIdRoute,
+  AccountPathnameRoute: AccountPathnameRoute,
+  AuthPathnameRoute: AuthPathnameRoute,
   ApplicationsIndexRoute: ApplicationsIndexRoute,
 }
 export const routeTree = rootRouteImport
