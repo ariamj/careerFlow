@@ -51,9 +51,12 @@ export default function NavBar() {
             <nav aria-label="Global" className="mx-auto flex items-center justify-between p-6 lg:px-8 lg:mx-0">
                 <div className="flex lg:flex-1">
                     <Link to="/Dashboard" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
+                        <span className="sr-only">CareerFlow</span>
                         <BriefcaseBusiness size={48} className = "h-8 w-auto dark:hidden" />
                         <BriefcaseBusiness size={48} color="#f5f5f5" className = "h-8 w-auto not-dark:hidden" />
+                    </Link>
+                    <Link to="/Dashboard" className="hidden xl:flex items-center ml-2">
+                        <h2 className="font-bold text-gray-900 dark:text-gray-100 ml-2">CareerFlow</h2>
                     </Link>
                 </div>
                 <div className="flex lg:hidden">
@@ -100,17 +103,14 @@ export default function NavBar() {
                 <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
                     <div className="flex items-center justify-between">
                         <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Your Company</span>
-                            <img
-                                alt=""
-                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                                className="h-8 w-auto dark:hidden"
-                            />
-                            <img
-                                alt=""
-                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500"
-                                className="h-8 w-auto not-dark:hidden"
-                            />
+                            <Link to="/Dashboard" className="-m-1.5 p-1.5">
+                                <span className="sr-only">CareerFlow</span>
+                                <BriefcaseBusiness size={48} className = "h-8 w-auto dark:hidden" />
+                                <BriefcaseBusiness size={48} color="#f5f5f5" className = "h-8 w-auto not-dark:hidden" />
+                            </Link>
+                            <Link to="/Dashboard" className="hidden xl:flex items-center ml-2">
+                                <h2 className="font-bold text-gray-900 dark:text-gray-100 ml-2">CareerFlow</h2>
+                            </Link>
                         </a>
                         <button
                             type="button"
@@ -144,12 +144,13 @@ export default function NavBar() {
                                 })}
                             </div>
                             <div className="py-6">
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
-                                >
-                                    Log in
-                                </a>
+                                {session ? (
+                                    <UserButton className="text-sm/6 font-semibold text-gray-900 bg-white hover:bg-gray-100 dark:text-white dark:bg-black dark:hover:bg-gray-800" />
+                                ) : (
+                                    <a href="#" className="text-sm/6 font-semibold text-gray-900 dark:text-white">
+                                        Log in <span aria-hidden="true">&rarr;</span>
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>
